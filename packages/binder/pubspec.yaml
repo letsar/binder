@@ -1,0 +1,19 @@
+name: binder
+description: A lightweight, yet powerful way to bind your application state with your business logic.
+version: 0.1.0
+homepage: https://github.com/letsar/binder
+
+environment:
+  sdk: ">=2.7.0 <3.0.0"
+  flutter: ">=1.17.0 <2.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  collection: ^1.14.13
+  meta: ^1.2.3
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  mockito: ^4.1.2
