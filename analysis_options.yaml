@@ -118,6 +118,9 @@ linter:
     # False positives
     top_level_function_literal_block: false
 
+    # We don't want to enforce this rule now.
+    sort_pub_dependencies: false
+
     # Too many false positives
     unawaited_futures: false
 
