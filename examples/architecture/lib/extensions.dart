@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 const _defaultDelay = Duration(milliseconds: 500);
 
 extension FutureX<T> on Future<T> {
