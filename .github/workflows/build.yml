@@ -12,7 +12,7 @@ jobs:
       matrix:
         package:
           - packages/binder
-          - examples/architecture
+          # - examples/architecture
           - examples/counter
           # - examples/select
           # - examples/todos
@@ -50,17 +50,7 @@ jobs:
         working-directory: ${{ matrix.package }}
 
       - name: Analyze
-        run: |
-          OUTPUT="$(flutter analyze)"
-          echo "$OUTPUT"
-          echo
-          if grep -q "error •" <<< "$OUTPUT"; then
-              echo "flutter analyze found errors"
-              exit 1
-          else
-              echo "flutter analyze didn't find any errors"
-              exit 0
-          fi
+        run: flutter analyze
         working-directory: ${{ matrix.package }}
 
       - name: Run tests
