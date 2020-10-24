@@ -14,9 +14,9 @@ jobs:
           - packages/binder
           - examples/architecture
           - examples/counter
-          - examples/select
+          # - examples/select
           - examples/todos
-          - examples/undo_redo
+          # - examples/undo_redo
           - examples/users_devices
         channel:
           - stable
