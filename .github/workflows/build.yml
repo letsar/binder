@@ -22,7 +22,6 @@ jobs:
           - stable
           - dev
           - beta
-          - master
 
     steps:
       - uses: actions/checkout@v2
