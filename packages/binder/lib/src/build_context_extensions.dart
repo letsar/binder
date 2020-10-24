@@ -1,7 +1,6 @@
 import 'package:flutter/widgets.dart';
 
 import 'core.dart';
-import 'inherited_binder_scope.dart';
 
 /// Public extensions on [BuildContext].
 extension BinderBuildContextExtensions on BuildContext {

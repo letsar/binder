@@ -1,3 +1,4 @@
+[![Build][github_action_badge]][github_action]
 [![Pub][pub_badge]][pub]
 
 # binder
@@ -420,6 +421,8 @@ If you find a bug or want a feature, but don't know how to fix/implement it, ple
 If you fixed a bug or implemented a feature, please send a [pull request][pr].
 
 <!-- Links -->
+[github_action_badge]: https://github.com/letsar/binder/workflows/Build/badge.svg
+[github_action]: https://github.com/letsar/binder/actions
 [pub_badge]: https://img.shields.io/pub/v/binder.svg
 [pub]: https://pub.dartlang.org/packages/binder
 [binder_logo]: https://raw.githubusercontent.com/letsar/binder/main/images/logo.svg

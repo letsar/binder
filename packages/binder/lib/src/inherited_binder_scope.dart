@@ -1,7 +1,4 @@
-import 'package:flutter/widgets.dart';
-
-import 'binder_container.dart';
-import 'core.dart';
+part of 'core.dart';
 
 class InheritedBinderScope extends InheritedModel<Aspect> {
   const InheritedBinderScope({

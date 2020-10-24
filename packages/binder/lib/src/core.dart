@@ -5,11 +5,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
 import 'binder_container.dart';
-import 'inherited_binder_scope.dart';
 import 'memento.dart';
 import 'observer.dart';
 
 part 'binder_scope.dart';
+part 'inherited_binder_scope.dart';
 
 /// Signature for determining whether two states are the same.
 typedef EqualityComparer<T> = bool Function(T a, T b);

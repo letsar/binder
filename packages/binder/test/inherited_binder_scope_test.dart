@@ -1,6 +1,5 @@
 import 'package:binder/src/binder_container.dart';
 import 'package:binder/src/core.dart';
-import 'package:binder/src/inherited_binder_scope.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
