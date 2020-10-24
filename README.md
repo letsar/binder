@@ -44,7 +44,7 @@ final counterRef = StateRef(0);
 
 **Note**: A state should be immutable, so that the only way to update it, is through methods provided by this package.
 
-Any logic component has to be declared through a `LogicRef` with a function that will be use to create it:
+Any logic component has to be declared through a `LogicRef` with a function that will be used to create it:
 
 ```dart
 final counterViewLogicRef = LogicRef((scope) => CounterViewLogic(scope));
@@ -52,7 +52,7 @@ final counterViewLogicRef = LogicRef((scope) => CounterViewLogic(scope));
 
 The `binder` argument can then be used by the logic to mutate the state and access other logic components.
 
-**Note**: You can declare `StateRef` and `LogicRef` objects as public global variables if you want them to be accessible to other part of your app.
+**Note**: You can declare `StateRef` and `LogicRef` objects as public global variables if you want them to be accessible from other parts of your app.
 
 If we want our `CounterViewLogic` to be able to increment our counter state, we might write something like this:
 
@@ -134,7 +134,7 @@ A state can be of a simple type as an `int` or a `String` but it can also be mor
 
 ```dart
 class User {
-  const User(this.firstName, this.lastName, this.age);
+  const User(this.firstName, this.lastName, this.score);
 
   final String firstName;
   final String lastName;
@@ -162,13 +162,14 @@ class AppBarTitle extends StatelessWidget {
 
 #### Overrides
 
-It can be useful to be able to override the initial state or the factory of `StateRef` and `LogicRef` in some conditions:
+It can be useful to be able to override the initial state of `StateRef` or the factory of `LogicRef` in some conditions:
 - When we want a subtree to have its own state/logic under the same reference.
 - For mocking values in tests.
 
 ##### Reusing a reference under a different scope.
 
 Let's say we want to create an app where a user can create counters and see the sum of all counters:
+
 ![Counters][counters]
 
 We could do this by having a global state being a list of integers, and a business logic component for adding counters and increment them:
@@ -279,7 +280,7 @@ Whenever the `apiClientRef` is used in your app, the `MockApiClient` instance wi
 
 #### Computed
 
-You may encounter a situation where different widgets are interested in a derived state which is computed from different sates. In this situation it can be helpful to have a way to define this derived state globally so that you don't have to copy/paste this logic across your widgets.
+You may encounter a situation where different widgets are interested in a derived state which is computed from different sates. In this situation it can be helpful to have a way to define this derived state globally, so that you don't have to copy/paste this logic across your widgets.
 **Binder** comes with a `Computed` class to help you with that use case.
 
 Let's say you have a list of products referenced by `productsRef`, each product has a price, and you can filter these products according to a price range (referenced by `minPriceRef` and `maxPriceRef`).
@@ -312,8 +313,25 @@ Widget build(BuildContext context) {
 
 #### Observers
 
-You may want to observe when the state changed and do some action accordingly.
-To do so, you'll need to implements the `StateObserver` interface (or use a `DelegatingStateObserver`) and provide an instance to the `observers` parameter of the `BinderScope` constructor. 
+You may want to observe when the state changed and do some action accordingly (for example, logging state changes).
+To do so, you'll need to implement the `StateObserver` interface (or use a `DelegatingStateObserver`) and provide an instance to the `observers` parameter of the `BinderScope` constructor. 
+
+```dart
+bool onStateUpdated<T>(StateRef<T> ref, T oldState, T newState, Object action) {
+  logs.add(
+    '[${ref.key.name}#$action] changed from $oldState to $newState',
+  );
+
+  // Indicates whether this observer handled the changes.
+  // If true, then other observers are not called.
+  return true;
+}
+...
+BinderScope(
+  observers: [DelegatingStateObserver(onStateUpdated)],
+  child: const SubTree(),
+);
+```
 
 #### Undo/Redo
 
@@ -394,10 +412,6 @@ In the above snippet, each time the state referenced by `authenticationResultRef
 
 I'm working on my packages on my free-time, but I don't have as much time as I would. If this package or any other package I created is helping you, please consider to sponsor me so that I can take time to read the issues, fix bugs, merge pull requests and add features to these packages.
 
-## Changelog
-
-Please see the [Changelog][changelog] page to know what's recently changed.
-
 ## Contributions
 
 Feel free to contribute to this project.
@@ -408,12 +422,11 @@ If you fixed a bug or implemented a feature, please send a [pull request][pr].
 <!-- Links -->
 [pub_badge]: https://img.shields.io/pub/v/binder.svg
 [pub]: https://pub.dartlang.org/packages/binder
-[binder_logo]: https://raw.githubusercontent.com/letsar/binder/master/images/logo.svg
+[binder_logo]: https://raw.githubusercontent.com/letsar/binder/main/images/logo.svg
 [img_data_flow]: https://raw.githubusercontent.com/letsar/binder/images/data_flow.png
 [counters]: https://raw.githubusercontent.com/letsar/binder/images/counters.gif
-[example_main]: https://github.com/letsar/binder/blob/master/packages/binder/example/lib/main.dart
-[example_main_overrides]: https://github.com/letsar/binder/blob/master/packages/binder/example/lib/main_overrides.dart
-[example_main_computed]: https://github.com/letsar/binder/blob/master/packages/binder/example/lib/main_computed.dart
-[changelog]: https://github.com/letsar/binder/blob/master/CHANGELOG.md
+[example_main]: https://github.com/letsar/binder/blob/main/packages/binder/example/lib/main.dart
+[example_main_overrides]: https://github.com/letsar/binder/blob/main/packages/binder/example/lib/main_overrides.dart
+[example_main_computed]: https://github.com/letsar/binder/blob/main/packages/binder/example/lib/main_computed.dart
 [issue]: https://github.com/letsar/binder/issues
 [pr]: https://github.com/letsar/binder/pulls

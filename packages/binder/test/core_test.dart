@@ -1,5 +1,7 @@
 import 'package:binder/src/binder_container.dart';
+import 'package:binder/src/build_context_extensions.dart';
 import 'package:binder/src/core.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -190,6 +192,35 @@ void main() {
             ]));
         expect(funcCalled, true);
       });
+    });
+
+    testWidgets('throws a StackOverlflowError if circular reference',
+        (tester) async {
+      Computed<int> computed1;
+      Computed<int> computed2;
+
+      computed1 = Computed((watch) {
+        final t = watch(computed2) * 2;
+        return 2 + t;
+      });
+
+      computed2 = Computed((watch) {
+        final t = watch(computed1) * 2;
+        return 2 * t;
+      });
+
+      await tester.pumpWidget(
+        BinderScope(
+          child: Builder(
+            builder: (context) {
+              context.watch(computed2);
+              return const SizedBox();
+            },
+          ),
+        ),
+      );
+
+      expect(tester.takeException(), isA<StackOverflowError>());
     });
   });
 

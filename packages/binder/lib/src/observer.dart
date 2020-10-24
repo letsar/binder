@@ -26,6 +26,8 @@ typedef OnStateUpdated = bool Function<T>(
 /// ```
 abstract class StateObserver {
   /// Called when a state changed.
+  /// This method must return [true] if the changes have been handled and other
+  /// observers must no be called, or [false] if other observers can be called.
   bool didChanged<T>(StateRef<T> ref, T oldState, T newState, Object action);
 }
 
