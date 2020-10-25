@@ -409,6 +409,10 @@ In the above snippet, each time the state referenced by `authenticationResultRef
 
 ***
 
+## Snippets
+
+You can find code snippets for vscode at [snippets].
+
 ## Sponsoring
 
 I'm working on my packages on my free-time, but I don't have as much time as I would. If this package or any other package I created is helping you, please consider to sponsor me so that I can take time to read the issues, fix bugs, merge pull requests and add features to these packages.
@@ -433,3 +437,4 @@ If you fixed a bug or implemented a feature, please send a [pull request][pr].
 [example_main_computed]: https://github.com/letsar/binder/blob/main/packages/binder/example/lib/main_computed.dart
 [issue]: https://github.com/letsar/binder/issues
 [pr]: https://github.com/letsar/binder/pulls
+[snippets]: https://github.com/letsar/flutter-binder-snippets
