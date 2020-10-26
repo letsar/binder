@@ -56,3 +56,6 @@ jobs:
       - name: Run tests
         run: flutter test --coverage
         working-directory: ${{ matrix.package }}
+
+      - name: Upload coverage to codecov
+        run: curl -s https://codecov.io/bash | bash

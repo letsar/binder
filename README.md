@@ -1,5 +1,6 @@
 [![Build][github_action_badge]][github_action]
 [![Pub][pub_badge]][pub]
+[![Codecov][codecov_badge]][codecov]
 
 # binder
 
@@ -429,6 +430,8 @@ If you fixed a bug or implemented a feature, please send a [pull request][pr].
 [github_action]: https://github.com/letsar/binder/actions
 [pub_badge]: https://img.shields.io/pub/v/binder.svg
 [pub]: https://pub.dartlang.org/packages/binder
+[codecov]: https://codecov.io/gh/letsar/binder
+[codecov_badge]: https://codecov.io/gh/letsar/binder/branch/main/graph/badge.svg
 [binder_logo]: https://raw.githubusercontent.com/letsar/binder/main/images/logo.svg
 [img_data_flow]: https://raw.githubusercontent.com/letsar/binder/main/images/data_flow.png
 [counters]: https://raw.githubusercontent.com/letsar/binder/main/images/counters.gif
