@@ -1,6 +1,6 @@
 name: binder
 description: A lightweight, yet powerful way to bind your application state with your business logic.
-version: 0.1.0
+version: 0.1.1
 homepage: https://github.com/letsar/binder
 
 environment:
