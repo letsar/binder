@@ -430,8 +430,8 @@ If you fixed a bug or implemented a feature, please send a [pull request][pr].
 [pub_badge]: https://img.shields.io/pub/v/binder.svg
 [pub]: https://pub.dartlang.org/packages/binder
 [binder_logo]: https://raw.githubusercontent.com/letsar/binder/main/images/logo.svg
-[img_data_flow]: https://raw.githubusercontent.com/letsar/binder/images/data_flow.png
-[counters]: https://raw.githubusercontent.com/letsar/binder/images/counters.gif
+[img_data_flow]: https://raw.githubusercontent.com/letsar/binder/main/images/data_flow.png
+[counters]: https://raw.githubusercontent.com/letsar/binder/main/images/counters.gif
 [example_main]: https://github.com/letsar/binder/blob/main/packages/binder/example/lib/main.dart
 [example_main_overrides]: https://github.com/letsar/binder/blob/main/packages/binder/example/lib/main_overrides.dart
 [example_main_computed]: https://github.com/letsar/binder/blob/main/packages/binder/example/lib/main_computed.dart
