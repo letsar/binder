@@ -52,7 +52,7 @@ Any logic component has to be declared through a `LogicRef` with a function that
 final counterViewLogicRef = LogicRef((scope) => CounterViewLogic(scope));
 ```
 
-The `binder` argument can then be used by the logic to mutate the state and access other logic components.
+The `scope` argument can then be used by the logic to mutate the state and access other logic components.
 
 **Note**: You can declare `StateRef` and `LogicRef` objects as public global variables if you want them to be accessible from other parts of your app.
 
