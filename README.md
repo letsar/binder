@@ -437,4 +437,4 @@ If you fixed a bug or implemented a feature, please send a [pull request][pr].
 [example_main_computed]: https://github.com/letsar/binder/blob/main/packages/binder/example/lib/main_computed.dart
 [issue]: https://github.com/letsar/binder/issues
 [pr]: https://github.com/letsar/binder/pulls
-[snippets]: https://github.com/letsar/flutter-binder-snippets
+[snippets]: https://marketplace.visualstudio.com/items?itemName=romain-rastel.flutter-binder-snippets
