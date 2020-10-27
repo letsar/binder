@@ -119,9 +119,10 @@ void main() {
       );
 
       expect(
-        newWidget.updateShouldNotifyDependent(oldWidget, {
-          Aspect<int, int>(intRef2),
-        }),
+        newWidget.updateShouldNotifyDependent(
+          oldWidget,
+          Dependencies([Aspect<int, int>(intRef2)]),
+        ),
         false,
       );
     });
@@ -150,9 +151,10 @@ void main() {
       );
 
       expect(
-        newWidget.updateShouldNotifyDependent(oldWidget, {
-          Aspect<int, int>(intRef1),
-        }),
+        newWidget.updateShouldNotifyDependent(
+          oldWidget,
+          Dependencies([Aspect<int, int>(intRef1)]),
+        ),
         false,
       );
     });
@@ -181,9 +183,10 @@ void main() {
       );
 
       expect(
-        newWidget.updateShouldNotifyDependent(oldWidget, {
-          Aspect<int, int>(intRef1),
-        }),
+        newWidget.updateShouldNotifyDependent(
+          oldWidget,
+          Dependencies([Aspect<int, int>(intRef1)]),
+        ),
         true,
       );
     });
@@ -215,10 +218,13 @@ void main() {
       );
 
       expect(
-        newWidget.updateShouldNotifyDependent(oldWidget, {
-          Aspect<int, int>(intRef1),
-          Aspect<int, int>(intRef2),
-        }),
+        newWidget.updateShouldNotifyDependent(
+          oldWidget,
+          Dependencies([
+            Aspect<int, int>(intRef1),
+            Aspect<int, int>(intRef2),
+          ]),
+        ),
         true,
       );
     });

@@ -332,6 +332,52 @@ void main() {
           expect(buildCount, 3);
         },
       );
+
+      testWidgets('should be disposed ', (tester) async {
+        int counter = 0;
+        final ref = StateRef(0);
+
+        await tester.pumpWidget(BinderScope(
+          child: Builder(
+            builder: (context) {
+              context.watch(ref.select((state) {
+                counter++;
+                return state + 4;
+              }));
+              return const SizedBox();
+            },
+          ),
+        ));
+
+        expect(counter, 1);
+
+        await tester.pumpWidget(BinderScope(
+          child: Builder(
+            builder: (context) {
+              context.watch(ref.select((state) {
+                counter++;
+                return state + 4;
+              }));
+              return const SizedBox();
+            },
+          ),
+        ));
+
+        await tester.pumpWidget(BinderScope(
+          child: Builder(
+            builder: (context) {
+              context.watch(ref.select((state) {
+                counter++;
+                return state + 4;
+              }));
+              return const SizedBox();
+            },
+          ),
+        ));
+
+        // The counter may be less in the future.
+        expect(counter, 7);
+      });
     });
 
     group('overrides', () {
