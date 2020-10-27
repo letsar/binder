@@ -21,7 +21,6 @@ class InheritedBinderScope extends InheritedWidget {
     return oldWidget.container != container;
   }
 
-  @override
   bool updateShouldNotifyDependent(
     InheritedBinderScope oldWidget,
     Dependencies dependencies,
