@@ -179,6 +179,8 @@ class StateSelector<T, S> extends Watchable<T, S> {
 
   final Watchable<T, T> ref;
   final Selector<T, S> selector;
+
+  @override
   final List<BinderKey> keys;
 
   @override
