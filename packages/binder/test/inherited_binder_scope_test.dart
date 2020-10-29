@@ -40,6 +40,7 @@ void main() {
       const InheritedBinderScope(
         container: BinderContainer(null, null),
         scope: null,
+        writtenKeys: {},
         child: SizedBox(),
       );
 
@@ -47,6 +48,7 @@ void main() {
         () => InheritedBinderScope(
           container: null,
           scope: null,
+          writtenKeys: const {},
           child: const SizedBox(),
         ),
         throwsAssertionError,
@@ -57,6 +59,17 @@ void main() {
           container: const BinderContainer(null, null),
           scope: null,
           child: null,
+          writtenKeys: const {},
+        ),
+        throwsAssertionError,
+      );
+
+      expect(
+        () => InheritedBinderScope(
+          container: const BinderContainer(null, null),
+          scope: null,
+          writtenKeys: null,
+          child: const SizedBox(),
         ),
         throwsAssertionError,
       );
@@ -66,12 +79,14 @@ void main() {
       const oldWidget = InheritedBinderScope(
         container: BinderContainer(null, null),
         scope: null,
+        writtenKeys: {},
         child: SizedBox(),
       );
 
       const newWidget = InheritedBinderScope(
         container: BinderContainer(null, null),
         scope: null,
+        writtenKeys: {},
         child: SizedBox(),
       );
 
@@ -82,12 +97,14 @@ void main() {
       const oldWidget = InheritedBinderScope(
         container: BinderContainer({null: 6}, null),
         scope: null,
+        writtenKeys: {},
         child: SizedBox(),
       );
 
       const newWidget = InheritedBinderScope(
         container: BinderContainer({null: 4}, null),
         scope: null,
+        writtenKeys: {},
         child: SizedBox(),
       );
 
@@ -109,12 +126,14 @@ void main() {
       final oldWidget = InheritedBinderScope(
         container: BinderContainer(oldState, null),
         scope: null,
+        writtenKeys: const {},
         child: const SizedBox(),
       );
 
       final newWidget = InheritedBinderScope(
         container: BinderContainer(newState, null),
         scope: null,
+        writtenKeys: {intRef1.key, intRef2.key},
         child: const SizedBox(),
       );
 
@@ -141,12 +160,14 @@ void main() {
       final oldWidget = InheritedBinderScope(
         container: BinderContainer(oldState, null),
         scope: null,
+        writtenKeys: const {},
         child: const SizedBox(),
       );
 
       final newWidget = InheritedBinderScope(
         container: BinderContainer(newState, null),
         scope: null,
+        writtenKeys: {intRef1.key},
         child: const SizedBox(),
       );
 
@@ -173,12 +194,14 @@ void main() {
       final oldWidget = InheritedBinderScope(
         container: BinderContainer(oldState, null),
         scope: null,
+        writtenKeys: const {},
         child: const SizedBox(),
       );
 
       final newWidget = InheritedBinderScope(
         container: BinderContainer(newState, null),
         scope: null,
+        writtenKeys: {intRef1.key},
         child: const SizedBox(),
       );
 
@@ -208,12 +231,90 @@ void main() {
       final oldWidget = InheritedBinderScope(
         container: BinderContainer(oldState, null),
         scope: null,
+        writtenKeys: const {},
         child: const SizedBox(),
       );
 
       final newWidget = InheritedBinderScope(
         container: BinderContainer(newState, null),
         scope: null,
+        writtenKeys: {intRef1.key, intRef2.key},
+        child: const SizedBox(),
+      );
+
+      expect(
+        newWidget.updateShouldNotifyDependent(
+          oldWidget,
+          Dependencies([
+            Aspect<int, int>(intRef1),
+            Aspect<int, int>(intRef2),
+          ]),
+        ),
+        true,
+      );
+    });
+
+    test('notify only if written keys matches updates', () {
+      final intRef1 = StateRef(1);
+      final intRef2 = StateRef(2);
+
+      final oldState = {
+        intRef1.key: 6,
+        intRef2.key: 8,
+      };
+
+      final newState = {
+        intRef1.key: 6,
+        intRef2.key: 0,
+      };
+
+      final oldWidget = InheritedBinderScope(
+        container: BinderContainer(oldState, null),
+        scope: null,
+        writtenKeys: const {},
+        child: const SizedBox(),
+      );
+
+      var newWidget = InheritedBinderScope(
+        container: BinderContainer(newState, null),
+        scope: null,
+        writtenKeys: const {},
+        child: const SizedBox(),
+      );
+
+      expect(
+        newWidget.updateShouldNotifyDependent(
+          oldWidget,
+          Dependencies([
+            Aspect<int, int>(intRef1),
+            Aspect<int, int>(intRef2),
+          ]),
+        ),
+        false,
+      );
+
+      newWidget = InheritedBinderScope(
+        container: BinderContainer(newState, null),
+        scope: null,
+        writtenKeys: {intRef1.key},
+        child: const SizedBox(),
+      );
+
+      expect(
+        newWidget.updateShouldNotifyDependent(
+          oldWidget,
+          Dependencies([
+            Aspect<int, int>(intRef1),
+            Aspect<int, int>(intRef2),
+          ]),
+        ),
+        false,
+      );
+
+      newWidget = InheritedBinderScope(
+        container: BinderContainer(newState, null),
+        scope: null,
+        writtenKeys: {intRef2.key},
         child: const SizedBox(),
       );
 

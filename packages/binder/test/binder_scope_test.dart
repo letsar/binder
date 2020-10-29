@@ -333,7 +333,8 @@ void main() {
         },
       );
 
-      testWidgets('should be disposed ', (tester) async {
+      testWidgets('old selectors must be removed after a rebuild',
+          (tester) async {
         int counter = 0;
         final ref = StateRef(0);
 
@@ -376,7 +377,115 @@ void main() {
         ));
 
         // The counter may be less in the future.
-        expect(counter, 7);
+        expect(counter, 3);
+      });
+
+      testWidgets('only impacted selectors are called', (tester) async {
+        final a = StateRef(0);
+        final b = StateRef(0);
+
+        final logs = <String>[];
+        BuildContext ctx;
+
+        final builder = Builder(builder: (context) {
+          ctx = context;
+          return const SizedBox();
+        });
+
+        final bWidget = Builder(builder: (context) {
+          context.watch(b.select((state) {
+            logs.add('b');
+            return state + 4;
+          }));
+          return builder;
+        });
+
+        final aWidget = Builder(builder: (context) {
+          context.watch(a.select((state) {
+            logs.add('a');
+            return state + 2;
+          }));
+          return bWidget;
+        });
+
+        await tester.pumpWidget(
+          BinderScope(
+            // We override the states because we want them to be stored right now.
+            overrides: [
+              a.overrideWith(1),
+              b.overrideWith(3),
+            ],
+            child: aWidget,
+          ),
+        );
+
+        expect(ctx.read(a), 1);
+        expect(ctx.read(b), 3);
+
+        expect(logs, ['a', 'b']);
+
+        ctx.write(a, 4);
+        await tester.pump();
+
+        // The `a` selector is runned twice before the rebuild of the widget
+        // because we run it for the old state and the new one.
+        expect(logs, ['a', 'b', 'a', 'a', 'a']);
+      });
+
+      testWidgets('only impacted computed are called', (tester) async {
+        final logs = <String>[];
+        final a = StateRef(0);
+        final b = StateRef(0);
+
+        final ca = Computed((watch) {
+          logs.add('a');
+          return watch(a) * 2;
+        });
+
+        final cb = Computed((watch) {
+          logs.add('b');
+          return watch(b) * 2;
+        });
+
+        BuildContext ctx;
+
+        final builder = Builder(builder: (context) {
+          ctx = context;
+          return const SizedBox();
+        });
+
+        final bWidget = Builder(builder: (context) {
+          context.watch(cb);
+          return builder;
+        });
+
+        final aWidget = Builder(builder: (context) {
+          context.watch(ca);
+          return bWidget;
+        });
+
+        await tester.pumpWidget(
+          BinderScope(
+            // We override the states because we want them to be stored right now.
+            overrides: [
+              a.overrideWith(1),
+              b.overrideWith(3),
+            ],
+            child: aWidget,
+          ),
+        );
+
+        expect(ctx.read(a), 1);
+        expect(ctx.read(b), 3);
+
+        expect(logs, ['a', 'b']);
+
+        ctx.write(a, 4);
+        await tester.pump();
+
+        // The `a` selector is runned twice before the rebuild of the widget
+        // because we run it for the old state and the new one.
+        expect(logs, ['a', 'b', 'a', 'a', 'a']);
       });
     });
 
@@ -605,6 +714,42 @@ void main() {
 
         expect(ctx.read(a), 5);
         expect(ctx.read(b), 10);
+      });
+
+      testWidgets('- states are updated when the initial value changes',
+          (tester) async {
+        final a = StateRef(0);
+        final b = StateRef(0);
+
+        BuildContext ctx;
+        int result;
+
+        final child = Builder(
+          builder: (context) {
+            result = context.watch(b);
+            return const SizedBox();
+          },
+        );
+
+        await tester.pumpWidget(
+          BinderScope(
+            child: Builder(
+              builder: (context) {
+                ctx = context;
+                return BinderScope(
+                  overrides: [b.overrideWith(context.watch(a) + 4)],
+                  child: child,
+                );
+              },
+            ),
+          ),
+        );
+
+        expect(result, 4);
+
+        ctx.write(a, 8);
+        await tester.pump();
+        expect(result, 12);
       });
     });
 

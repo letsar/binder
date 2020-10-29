@@ -83,6 +83,9 @@ abstract class Watchable<T, S> {
   final EqualityComparer<S> equalityComparer;
 
   /// Internal use only.
+  List<BinderKey> get keys;
+
+  /// Internal use only.
   bool equals(S oldState, S newState) =>
       _equals(equalityComparer, oldState, newState);
 
@@ -100,10 +103,20 @@ class StateRef<T> extends Watchable<T, T> {
   ///
   /// A [name] can be provided to this reference for debugging purposes.
   StateRef(
-    this.initialState, {
+    T initialState, {
     EqualityComparer<T> equalityComparer,
     String name,
-  })  : key = BinderKey(name ?? 'StateRef<$T>'),
+  }) : this._(
+          initialState,
+          equalityComparer,
+          BinderKey(name ?? 'StateRef<$T>'),
+        );
+
+  StateRef._(
+    this.initialState,
+    EqualityComparer<T> equalityComparer,
+    this.key,
+  )   : keys = [key],
         super(equalityComparer);
 
   /// This is the initial value of the state.
@@ -111,6 +124,9 @@ class StateRef<T> extends Watchable<T, T> {
 
   /// Internal use.
   final BinderKey key;
+
+  @override
+  final List<BinderKey> keys;
 
   /// Overrides this referenced with a new value.
   ///
@@ -129,30 +145,41 @@ class StateRef<T> extends Watchable<T, T> {
 class Computed<T> extends Watchable<T, T> {
   /// Creates a derived state which combine the current state of other parts and
   /// allows any widget to be rebuilt when the underlaying value changes.
-  const Computed(
+  Computed(
     this.stateBuilder, {
     EqualityComparer<T> equalityComparer,
-  }) : super(equalityComparer);
+  })  : keys = <BinderKey>[],
+        super(equalityComparer);
 
   /// The function used to build the state.
   final StateBuilder<T> stateBuilder;
 
   @override
+  final List<BinderKey> keys;
+
+  @override
   T read(StateReader read) {
-    Y watch<X, Y>(Watchable<X, Y> p) => p.read(read);
+    keys.clear();
+    Y watch<X, Y>(Watchable<X, Y> p) {
+      keys.addAll(p.keys);
+      return p.read(read);
+    }
+
     return stateBuilder(watch);
   }
 }
 
 class StateSelector<T, S> extends Watchable<T, S> {
-  const StateSelector(
+  StateSelector(
     this.ref,
     this.selector,
     EqualityComparer<S> equalityComparer,
-  ) : super(equalityComparer);
+  )   : keys = ref.keys,
+        super(equalityComparer);
 
   final Watchable<T, T> ref;
   final Selector<T, S> selector;
+  final List<BinderKey> keys;
 
   @override
   S read(StateReader read) {

@@ -5,13 +5,16 @@ class InheritedBinderScope extends InheritedWidget {
     Key key,
     @required this.container,
     @required this.scope,
+    @required this.writtenKeys,
     @required Widget child,
   })  : assert(container != null),
         assert(child != null),
+        assert(writtenKeys != null),
         super(key: key, child: child);
 
   final BinderContainer container;
   final Scope scope;
+  final Set<BinderKey> writtenKeys;
 
   @override
   InheritedElement createElement() => InheritedBinderScopeElement(this);
@@ -28,7 +31,10 @@ class InheritedBinderScope extends InheritedWidget {
     final oldReader = oldWidget.container.fetch;
     final newReader = container.fetch;
 
-    return dependencies.aspects.any((aspect) {
+    return dependencies.aspects.where((aspect) {
+      // We only test the impacted aspects.
+      return aspect.ref.keys.any((key) => writtenKeys.contains(key));
+    }).any((aspect) {
       return aspect.shouldRebuild(oldReader, newReader);
     });
   }

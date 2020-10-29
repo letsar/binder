@@ -54,6 +54,8 @@ class BinderScopeState extends State<BinderScope>
     with BinderContainerMixin, AutomaticKeepAliveClientMixin<BinderScope>
     implements Scope {
   final Set<BinderKey> readOnlyKeys = <BinderKey>{};
+  final Set<BinderKey> writtenKeys = <BinderKey>{};
+  bool clearScheduled = false;
 
   @override
   BinderScopeState parent;
@@ -65,6 +67,7 @@ class BinderScopeState extends State<BinderScope>
   void initState() {
     super.initState();
     widget.overrides.forEach((override) {
+      addWrittenKey(override.key);
       states[override.key] = override.create(this);
       readOnlyKeys.add(override.key);
     });
@@ -92,10 +95,12 @@ class BinderScopeState extends State<BinderScope>
       if (newOverride != null) {
         // We have to update the state only if the state has never been written.
         if (readOnlyKeys.contains(key)) {
+          addWrittenKey(key);
           states[key] = newOverride.create(this);
         }
       } else {
         // We have to remove states from overrides that are no longer present.
+        addWrittenKey(key);
         readOnlyKeys.remove(key);
         states.remove(key);
       }
@@ -106,6 +111,7 @@ class BinderScopeState extends State<BinderScope>
       final key = newOverride.key;
       if (!oldOverrides.containsKey(key)) {
         readOnlyKeys.add(key);
+        addWrittenKey(key);
         states[key] = newOverride.create(this);
       }
     });
@@ -125,7 +131,19 @@ class BinderScopeState extends State<BinderScope>
 
   @override
   void write<T>(StateRef<T> ref, T state, [Object action]) {
+    addWrittenKey(ref.key);
     writeAndObserve(ref, state, action, []);
+  }
+
+  void addWrittenKey(BinderKey key) {
+    writtenKeys.add(key);
+    if (!clearScheduled) {
+      clearScheduled = true;
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        clearScheduled = false;
+        writtenKeys.clear();
+      });
+    }
   }
 
   /// Internal use only.
@@ -173,9 +191,11 @@ class BinderScopeState extends State<BinderScope>
   @override
   void clear<T>(StateRef<T> ref) {
     if (isOwner(ref.key)) {
+      final key = ref.key;
       setState(() {
-        readOnlyKeys.remove(ref.key);
-        states.remove(ref.key);
+        addWrittenKey(key);
+        readOnlyKeys.remove(key);
+        states.remove(key);
       });
     } else {
       parent.clear(ref);
@@ -211,12 +231,16 @@ class BinderScopeState extends State<BinderScope>
   @override
   bool get wantKeepAlive => true;
 
+  Set<BinderKey> get allWrittenKeys =>
+      writtenKeys.toSet()..addAll(parent?.allWrittenKeys ?? {});
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
     return InheritedBinderScope(
       container: createContainer(),
       scope: this,
+      writtenKeys: allWrittenKeys,
       child: widget.child,
     );
   }
