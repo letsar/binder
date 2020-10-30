@@ -487,6 +487,73 @@ void main() {
         // because we run it for the old state and the new one.
         expect(logs, ['a', 'b', 'a', 'a', 'a']);
       });
+
+      testWidgets('can be used conditionnaly', (tester) async {
+        final a = StateRef(1);
+        final b = StateRef(2);
+        final c = StateRef(a);
+
+        int state;
+        int buildCount = 0;
+
+        BuildContext ctx;
+
+        await tester.pumpWidget(
+          BinderScope(
+            child: Builder(
+              builder: (context) {
+                ctx = context;
+                buildCount++;
+
+                final ref = context.watch(c);
+                state = ref == null ? 0 : context.watch(ref);
+
+                return const SizedBox();
+              },
+            ),
+          ),
+        );
+
+        expect(state, 1);
+        expect(buildCount, 1);
+        ctx.write(a, 2);
+
+        await tester.pump();
+        expect(state, 2);
+        expect(buildCount, 2);
+
+        // We don't watch b currently.
+        ctx.write(b, 3);
+        await tester.pump();
+        expect(state, 2);
+        expect(buildCount, 2);
+
+        // We change what we watch.
+        ctx.write(c, b);
+        await tester.pump();
+        expect(state, 3);
+        expect(buildCount, 3);
+
+        // We don't watch a anymore.
+        ctx.write(a, 9);
+
+        await tester.pump();
+        expect(state, 3);
+        expect(buildCount, 3);
+
+        // We change what we watch again.
+        ctx.write(c, null);
+        await tester.pump();
+        expect(state, 0);
+        expect(buildCount, 4);
+
+        // We don't watch a or b anymore.
+        ctx.write(a, 8);
+        ctx.write(b, 7);
+        await tester.pump();
+        expect(state, 0);
+        expect(buildCount, 4);
+      });
     });
 
     group('overrides', () {
