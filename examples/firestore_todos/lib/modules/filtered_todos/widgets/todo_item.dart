@@ -17,10 +17,11 @@ class TodoItem extends StatelessWidget {
     return Dismissible(
       key: ValueKey('__todo_item_${todo.id}'),
       onDismissed: (_) {
-        context.use(todosLogicRef).delete(todo);
+        final logic = context.use(todosLogicRef);
+        logic.delete(todo);
         ScaffoldMessenger.of(context)
           ..hideCurrentSnackBar()
-          ..showSnackBar(createDeleteTodoSnackBar(context, todo));
+          ..showSnackBar(createDeleteTodoSnackBar(context, todo, logic));
       },
       child: ListTile(
         onTap: () async {
@@ -31,9 +32,11 @@ class TodoItem extends StatelessWidget {
           );
 
           if (removedTodo != null) {
+            final logic = context.use(todosLogicRef);
+
             ScaffoldMessenger.of(context)
               ..hideCurrentSnackBar()
-              ..showSnackBar(createDeleteTodoSnackBar(context, todo));
+              ..showSnackBar(createDeleteTodoSnackBar(context, todo, logic));
           }
         },
         leading: Checkbox(
@@ -65,7 +68,11 @@ class TodoItem extends StatelessWidget {
   }
 }
 
-SnackBar createDeleteTodoSnackBar(BuildContext context, Todo todo) {
+SnackBar createDeleteTodoSnackBar(
+  BuildContext context,
+  Todo todo,
+  TodosLogic logic,
+) {
   return SnackBar(
     content: Text(
       'Deleted ${todo.task}',
@@ -75,7 +82,7 @@ SnackBar createDeleteTodoSnackBar(BuildContext context, Todo todo) {
     duration: const Duration(seconds: 2),
     action: SnackBarAction(
       label: 'Undo',
-      onPressed: () => context.use(todosLogicRef).add(todo),
+      onPressed: () => logic.add(todo),
     ),
   );
 }
