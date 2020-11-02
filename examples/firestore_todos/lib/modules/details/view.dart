@@ -89,13 +89,6 @@ class DetailsView extends StatelessWidget {
                   MaterialPageRoute<void>(
                     builder: (context) {
                       return AddEditView(
-                        // onSave: (task, note) {
-                        //   BlocProvider.of<TodosBloc>(context).add(
-                        //     UpdateTodo(
-                        //       todo.copyWith(task: task, note: note),
-                        //     ),
-                        //   );
-                        // },
                         isEditing: true,
                         todo: todo,
                       );

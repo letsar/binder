@@ -8,9 +8,7 @@ final taskRef = StateRef('');
 final noteRef = StateRef('');
 
 final taskIsValidRef = Computed((watch) {
-  final x = watch(taskRef);
-  final t = watch(taskRef).trim().isNotEmpty;
-  return t;
+  return watch(taskRef).trim().isNotEmpty;
 });
 
 final canBeSubmittedRef = Computed((watch) {
