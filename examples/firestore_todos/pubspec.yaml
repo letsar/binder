@@ -1,0 +1,26 @@
+name: firestore_todos
+description: A new Flutter project.
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.7.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  binder:
+    path: ../../packages/binder
+  cloud_firestore: ^0.14.2
+  cupertino_icons: ^1.0.0
+  equatable: ^1.2.5
+  firebase_auth: ^0.18.2
+  firebase_core: ^0.5.1
+  gap: ^1.2.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
