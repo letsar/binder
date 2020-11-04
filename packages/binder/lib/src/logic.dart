@@ -36,7 +36,7 @@ mixin Logic {
   /// {@macro binder.scope.read}
   @protected
   @nonVirtual
-  S read<T, S>(Watchable<T, S> ref) {
+  T read<T>(Watchable<T> ref) {
     return scope.read(ref);
   }
 

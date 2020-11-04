@@ -162,6 +162,29 @@ class AppBarTitle extends StatelessWidget {
 }
 ```
 
+#### Consumer
+
+If you want to rebuild only a part of your widget tree and don't want to create a new widget, you can use the `Consumer` widget.
+This widget can take a watchable (a `StateRef` or even a selected state of a `StateRef`).
+
+```dart
+class MyAppBar extends StatelessWidget {
+  const MyAppBar({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return AppBar(
+      title: Consumer(
+        watchable:
+            userRef.select((user) => '${user.firstName} ${user.lastName}'),
+        builder: (context, String fullName, child) => Text(fullName),
+      ),
+    );
+  }
+}
+```
+
+
 #### Overrides
 
 It can be useful to be able to override the initial state of `StateRef` or the factory of `LogicRef` in some conditions:

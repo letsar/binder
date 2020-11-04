@@ -114,14 +114,14 @@ class Dependencies {
 
 @immutable
 @visibleForTesting
-class Aspect<T, S> {
+class Aspect<T> {
   const Aspect(this.ref);
 
-  final Watchable<T, S> ref;
+  final Watchable<T> ref;
 
   bool shouldRebuild(StateReader oldReader, StateReader newReader) {
-    final S oldState = ref.read(oldReader);
-    final S newState = ref.read(newReader);
+    final T oldState = ref.read(oldReader);
+    final T newState = ref.read(newReader);
     final bool result = !ref.equals(oldState, newState);
     return result;
   }

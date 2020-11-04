@@ -24,7 +24,7 @@ typedef Updater<T> = T Function(T oldState);
 /// Signature for creating a derived state from other states.
 ///
 /// Used by [Computed].
-typedef StateWatcher = S Function<T, S>(Watchable<T, S> ref);
+typedef StateWatcher = T Function<T>(Watchable<T> ref);
 
 /// Signature for creating a derived state from other states on demand.
 ///
@@ -54,7 +54,7 @@ abstract class Scope {
   /// {@template binder.scope.read}
   /// Gets the current state referenced by [ref].
   /// {@endtemplate}
-  S read<T, S>(Watchable<T, S> ref);
+  T read<T>(Watchable<T> ref);
 
   /// {@template binder.scope.use}
   /// Gets the current logic component referenced by [ref].
@@ -74,28 +74,28 @@ abstract class Scope {
 
 /// A part of the app state that can be watched.
 @immutable
-abstract class Watchable<T, S> {
+abstract class Watchable<T> {
   /// Abstract const constructor. This constructor enables subclasses to provide
   /// const constructors so that they can be used in const expressions.
   const Watchable(this.equalityComparer);
 
   /// The predicate determining if two states are the same.
-  final EqualityComparer<S> equalityComparer;
+  final EqualityComparer<T> equalityComparer;
 
   /// Internal use only.
   List<BinderKey> get keys;
 
   /// Internal use only.
-  bool equals(S oldState, S newState) =>
+  bool equals(T oldState, T newState) =>
       _equals(equalityComparer, oldState, newState);
 
   /// Internal use only.
   @visibleForTesting
-  S read(StateReader read);
+  T read(StateReader read);
 }
 
 /// A reference to a part of the app state.
-class StateRef<T> extends Watchable<T, T> {
+class StateRef<T> extends Watchable<T> {
   /// Creates a reference to a part of the app state with an [initialState].
   ///
   /// An [equalityComparer] can be provided to determine whether two instances
@@ -142,7 +142,7 @@ class StateRef<T> extends Watchable<T, T> {
 }
 
 /// A watchable derived state.
-class Computed<T> extends Watchable<T, T> {
+class Computed<T> extends Watchable<T> {
   /// Creates a derived state which combine the current state of other parts and
   /// allows any widget to be rebuilt when the underlaying value changes.
   Computed(
@@ -160,7 +160,7 @@ class Computed<T> extends Watchable<T, T> {
   @override
   T read(StateReader read) {
     keys.clear();
-    Y watch<X, Y>(Watchable<X, Y> p) {
+    X watch<X>(Watchable<X> p) {
       keys.addAll(p.keys);
       return p.read(read);
     }
@@ -169,7 +169,7 @@ class Computed<T> extends Watchable<T, T> {
   }
 }
 
-class StateSelector<T, S> extends Watchable<T, S> {
+class StateSelector<T, S> extends Watchable<S> {
   StateSelector(
     this.ref,
     this.selector,
@@ -177,7 +177,7 @@ class StateSelector<T, S> extends Watchable<T, S> {
   )   : keys = ref.keys,
         super(equalityComparer);
 
-  final Watchable<T, T> ref;
+  final Watchable<T> ref;
   final Selector<T, S> selector;
 
   @override
@@ -190,9 +190,9 @@ class StateSelector<T, S> extends Watchable<T, S> {
 }
 
 /// Extensions for [Watchable].
-extension WatchableExtensions<T> on Watchable<T, T> {
+extension WatchableExtensions<T> on Watchable<T> {
   /// Creates a selector on a reference that can be watched.
-  Watchable<T, S> select<S>(
+  Watchable<S> select<S>(
     Selector<T, S> selector, {
     EqualityComparer<S> equalityComparer,
   }) {

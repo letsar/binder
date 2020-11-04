@@ -75,7 +75,7 @@ void main() {
       final a = StateRef(0);
 
       expect(
-        () => StateListener<int, int>(
+        () => StateListener<int>(
           watchable: null,
           onStateChanged: (_, int __) {},
           child: const SizedBox(),

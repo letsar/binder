@@ -7,7 +7,7 @@ typedef OnStateChanged<T> = void Function(BuildContext context, T state);
 
 /// A widget which watches a [StateRef] and calls a function when
 /// the underlying state changes.
-class StateListener<T, S> extends StatelessWidget {
+class StateListener<T> extends StatelessWidget {
   /// Creates a [StateListener].
   ///
   /// The parameters [watchable], [onStateChanged] and [child] must not be null.
@@ -22,10 +22,10 @@ class StateListener<T, S> extends StatelessWidget {
         super(key: key);
 
   /// The reference to watch.
-  final Watchable<T, S> watchable;
+  final Watchable<T> watchable;
 
   /// The function called when the state referenced changed.
-  final OnStateChanged<S> onStateChanged;
+  final OnStateChanged<T> onStateChanged;
 
   /// The widget below in the tree.
   ///
@@ -34,8 +34,8 @@ class StateListener<T, S> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final S value = context.watch(watchable);
-    return ValueListener<S>(
+    final T value = context.watch(watchable);
+    return ValueListener<T>(
       value: value,
       onValueChanged: onStateChanged,
       equalityComparer: watchable.equalityComparer,

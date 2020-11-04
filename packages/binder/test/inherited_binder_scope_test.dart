@@ -5,9 +5,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
 // ignore: must_be_immutable
-class MockStateRefBase<T, S> extends Mock implements Watchable<T, S> {}
+class MockStateRefBase<T> extends Mock implements Watchable<T> {}
 
-Watchable<int, int> ref;
+Watchable<int> ref;
 
 void main() {
   setUp(() {
@@ -140,7 +140,7 @@ void main() {
       expect(
         newWidget.updateShouldNotifyDependent(
           oldWidget,
-          Dependencies([Aspect<int, int>(intRef2)]),
+          Dependencies([Aspect<int>(intRef2)]),
         ),
         false,
       );
@@ -174,7 +174,7 @@ void main() {
       expect(
         newWidget.updateShouldNotifyDependent(
           oldWidget,
-          Dependencies([Aspect<int, int>(intRef1)]),
+          Dependencies([Aspect<int>(intRef1)]),
         ),
         false,
       );
@@ -208,7 +208,7 @@ void main() {
       expect(
         newWidget.updateShouldNotifyDependent(
           oldWidget,
-          Dependencies([Aspect<int, int>(intRef1)]),
+          Dependencies([Aspect<int>(intRef1)]),
         ),
         true,
       );
@@ -246,8 +246,8 @@ void main() {
         newWidget.updateShouldNotifyDependent(
           oldWidget,
           Dependencies([
-            Aspect<int, int>(intRef1),
-            Aspect<int, int>(intRef2),
+            Aspect<int>(intRef1),
+            Aspect<int>(intRef2),
           ]),
         ),
         true,
@@ -286,8 +286,8 @@ void main() {
         newWidget.updateShouldNotifyDependent(
           oldWidget,
           Dependencies([
-            Aspect<int, int>(intRef1),
-            Aspect<int, int>(intRef2),
+            Aspect<int>(intRef1),
+            Aspect<int>(intRef2),
           ]),
         ),
         false,
@@ -304,8 +304,8 @@ void main() {
         newWidget.updateShouldNotifyDependent(
           oldWidget,
           Dependencies([
-            Aspect<int, int>(intRef1),
-            Aspect<int, int>(intRef2),
+            Aspect<int>(intRef1),
+            Aspect<int>(intRef2),
           ]),
         ),
         false,
@@ -322,8 +322,8 @@ void main() {
         newWidget.updateShouldNotifyDependent(
           oldWidget,
           Dependencies([
-            Aspect<int, int>(intRef1),
-            Aspect<int, int>(intRef2),
+            Aspect<int>(intRef1),
+            Aspect<int>(intRef2),
           ]),
         ),
         true,

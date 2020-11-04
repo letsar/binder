@@ -8,7 +8,7 @@ extension BinderBuildContextExtensions on BuildContext {
   /// this methods when the state changes.
   ///
   /// Cannot be called outside a build method.
-  S watch<T, S>(Watchable<T, S> watchable) {
+  T watch<T>(Watchable<T> watchable) {
     assert(
         widget is LayoutBuilder ||
             widget is SliverWithKeepAliveWidget ||
@@ -42,8 +42,8 @@ extension BinderBuildContextInternalExtensions on BuildContext {
     );
   }
 
-  Scope watchScope<T, S>(Watchable<T, S> ref) {
-    return getBinder(InheritedBinderScope.of(this, Aspect<T, S>(ref)));
+  Scope watchScope<T>(Watchable<T> ref) {
+    return getBinder(InheritedBinderScope.of(this, Aspect<T>(ref)));
   }
 
   static Scope getBinder(InheritedBinderScope inheritedScope) {

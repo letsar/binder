@@ -1,6 +1,7 @@
 library binder;
 
 export 'src/build_context_extensions.dart' show BinderBuildContextExtensions;
+export 'src/consumer.dart';
 export 'src/core.dart'
     show
         Scope,
