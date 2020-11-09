@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.1]
+### Modified
+- `BuildContext.read()` can be called with any watchable, not only a `StateRef`.
+
 ## [0.2.0]
 ### Added
 - `Consumer` widget used to watch one watchable.
@@ -38,7 +42,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Initial release.
 
-[Unreleased]: https://github.com/letsar/binder/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/letsar/binder/compare/v0.2.1...HEAD
+[0.2.1]: https://github.com/letsar/binder/compare/releases/tag/v0.2.1
 [0.2.0]: https://github.com/letsar/binder/compare/releases/tag/v0.2.0
 [0.1.5]: https://github.com/letsar/binder/compare/releases/tag/v0.1.5
 [0.1.4]: https://github.com/letsar/binder/compare/releases/tag/v0.1.4

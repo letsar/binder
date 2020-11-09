@@ -164,6 +164,70 @@ void main() {
       expect(state0.states.containsKey(a.key), isTrue);
     });
 
+    group('read', () {
+      testWidgets('can be used with StateRef', (tester) async {
+        final a = StateRef(0);
+
+        BuildContext ctx;
+        await tester.pumpWidget(
+          BinderScope(
+            child: Builder(
+              builder: (c) {
+                ctx = c;
+                return const SizedBox();
+              },
+            ),
+          ),
+        );
+
+        expect(ctx.read(a), 0);
+        ctx.write(a, 2);
+        expect(ctx.read(a), 2);
+      });
+
+      testWidgets('can be used with Selector', (tester) async {
+        final a = StateRef(0);
+        final selector = a.select((state) => state + 3);
+
+        BuildContext ctx;
+        await tester.pumpWidget(
+          BinderScope(
+            child: Builder(
+              builder: (c) {
+                ctx = c;
+                return const SizedBox();
+              },
+            ),
+          ),
+        );
+
+        expect(ctx.read(selector), 3);
+        ctx.write(a, 2);
+        expect(ctx.read(selector), 5);
+      });
+
+      testWidgets('can be used with Computed', (tester) async {
+        final a = StateRef(0);
+        final computed = Computed((watch) => watch(a) + 3);
+
+        BuildContext ctx;
+        await tester.pumpWidget(
+          BinderScope(
+            child: Builder(
+              builder: (c) {
+                ctx = c;
+                return const SizedBox();
+              },
+            ),
+          ),
+        );
+
+        expect(ctx.read(computed), 3);
+        ctx.write(a, 2);
+        expect(ctx.read(computed), 5);
+      });
+    });
+
     group('watch', () {
       testWidgets(
         'throws when called outside of a build method',

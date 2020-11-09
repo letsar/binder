@@ -37,6 +37,14 @@ void main() {
     test('read calls binder.read', () {
       myLogic.read(stateRef);
       verify(mockScope.read(stateRef));
+
+      final selector = stateRef.select((state) => state + 3);
+      myLogic.read(selector);
+      verify(mockScope.read(selector));
+
+      final computed = Computed((watch) => watch(stateRef) + 3);
+      myLogic.read(computed);
+      verify(mockScope.read(computed));
     });
 
     test('redo calls binder.redo', () {

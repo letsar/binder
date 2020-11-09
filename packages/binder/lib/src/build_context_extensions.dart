@@ -17,12 +17,12 @@ extension BinderBuildContextExtensions on BuildContext {
     return watchScope(watchable).read(watchable);
   }
 
-  /// Reads the current state of the [ref].
+  /// Reads the current state of the [watchable].
   ///
   /// Cannot be called while building a widget.
-  T read<T>(StateRef<T> ref) {
+  T read<T>(Watchable<T> watchable) {
     assert(!debugDoingBuild, 'Cannot call read() while building a widget.');
-    return readScope().read(ref);
+    return readScope().read(watchable);
   }
 
   /// Gets the instance of the business logic component referenced by [ref].
