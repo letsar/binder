@@ -323,7 +323,7 @@ final filteredProductsRef = Computed((watch) {
 });
 ```
 
-Like `StateRef` you wan watch a `Computed` in the build method of a widget:
+Like `StateRef` you can watch a `Computed` in the build method of a widget:
 
 ```dart
 @override
