@@ -3,7 +3,7 @@ import 'package:binder/binder.dart';
 
 final splashViewLogicRef = LogicRef((scope) => SplashViewLogic(scope));
 
-class SplashViewLogic with Logic {
+class SplashViewLogic with Logic implements Loadable {
   const SplashViewLogic(this.scope);
 
   @override
@@ -12,6 +12,7 @@ class SplashViewLogic with Logic {
   AuthenticationRepository get _authenticationRepository =>
       use(authenticationRepositoryRef);
 
+  @override
   Future<void> load() async {
     final isAuthenticated = await _authenticationRepository.autoSignIn();
     final navigationResult =

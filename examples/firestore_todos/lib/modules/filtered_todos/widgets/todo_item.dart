@@ -19,7 +19,7 @@ class TodoItem extends StatelessWidget {
       onDismissed: (_) {
         final logic = context.use(todosLogicRef);
         logic.delete(todo);
-        ScaffoldMessenger.of(context)
+        Scaffold.of(context)
           ..hideCurrentSnackBar()
           ..showSnackBar(createDeleteTodoSnackBar(context, todo, logic));
       },
@@ -34,7 +34,7 @@ class TodoItem extends StatelessWidget {
           if (removedTodo != null) {
             final logic = context.use(todosLogicRef);
 
-            ScaffoldMessenger.of(context)
+            Scaffold.of(context)
               ..hideCurrentSnackBar()
               ..showSnackBar(createDeleteTodoSnackBar(context, todo, logic));
           }

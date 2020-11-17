@@ -1,12 +1,10 @@
 import 'package:binder/binder.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:users_devices/core/widgets/sliver_pinned_header.dart';
-import 'package:users_devices/logics/loadable.dart';
-import 'package:users_devices/logics/user_store.dart';
+import 'package:users_devices/logics/device_assignment.dart';
 import 'package:users_devices/logics/device_store.dart';
 import 'package:users_devices/logics/fake_connection_status_handler.dart';
-import 'package:users_devices/logics/device_assignment.dart';
+import 'package:users_devices/logics/user_store.dart';
 import 'package:users_devices/models/device.dart';
 import 'package:users_devices/models/user.dart';
 
@@ -35,35 +33,6 @@ final deviceListRef = StateRef(const <Device>[]);
 final deviceRef = StateRef<Device>(null);
 final userRef = StateRef<User>(null);
 
-class Load extends StatefulWidget {
-  const Load({
-    Key key,
-    this.refs,
-    this.child,
-  }) : super(key: key);
-
-  final List<LogicRef<Loadable>> refs;
-  final Widget child;
-
-  @override
-  _LoadState createState() => _LoadState();
-}
-
-class _LoadState extends State<Load> {
-  @override
-  void initState() {
-    super.initState();
-    SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-      widget.refs.forEach((ref) => context.use(ref).load());
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return widget.child;
-  }
-}
-
 /// A widget.
 class AssignmentPage extends StatelessWidget {
   /// Creates a [AssignmentPage].
@@ -73,7 +42,7 @@ class AssignmentPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Load(
+    return LogicLoader(
       refs: [
         userStoreRef,
         deviceStoreRef,

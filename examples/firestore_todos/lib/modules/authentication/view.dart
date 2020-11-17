@@ -1,5 +1,4 @@
 import 'package:firestore_todos/modules/authentication/logic.dart';
-import 'package:firestore_todos/modules/common/widgets/logic_loader.dart';
 import 'package:binder/binder.dart';
 import 'package:flutter/material.dart';
 
@@ -15,7 +14,7 @@ class AuthenticationView extends StatelessWidget {
         title: const Text('Authentication'),
       ),
       body: LogicLoader(
-        loader: (context) => context.use(authenticationViewLogicRef).init(),
+        refs: [authenticationViewLogicRef],
         child: StateListener(
           watchable: isAuthenticatedRef,
           onStateChanged: (context, bool isAuthenticated) {

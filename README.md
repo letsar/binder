@@ -184,6 +184,103 @@ class MyAppBar extends StatelessWidget {
 }
 ```
 
+#### LogicLoader
+
+If you want to trigger an asynchronous data load of a logic, from the widget side, `LogicLoader` is the widget you need! 
+
+To use it, you have to implement the `Loadable` interface in the logic which needs to load data.
+Then you'll have to override the `load` method and fetch the data inside it.
+
+```dart
+final usersRef = StateRef(const <User>[]);
+final loadingRef = StateRef(false);
+
+final usersLogicRef = LogicRef((scope) => UsersLogic(scope));
+
+class UsersLogic with Logic implements Loadable {
+  const UsersLogic(this.scope);
+
+  @override
+  final Scope scope;
+
+  UsersRepository get _usersRepository => use(usersRepositoryRef);
+
+  @override
+  Future<void> load() async {
+    write(loadingRef, true);
+    final users = await _usersRepository.fetchAll();
+    write(usersRef, users);
+    write(loadingRef, false);
+  }
+}
+```
+
+From the widget side, you'll have to use the `LogicLoader` and provide it the logic references you want to load:
+
+```dart
+class Home extends StatelessWidget {
+  const Home({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return LogicLoader(
+      refs: [usersLogicRef],
+      child: const UsersView(),
+    );
+  }
+}
+```
+
+You can watch the state in a subtree to display a progress indicator when the data is fetching:
+
+```dart
+class UsersView extends StatelessWidget {
+  const UsersView({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final loading = context.watch(loadingRef);
+    if (loading) {
+      return const CircularProgressIndicator();
+    }
+
+    // Display the users in a list when have been fetched.
+    final users = context.watch(usersRef);
+    return ListView(...);
+  }
+}
+```
+
+Alternatively, you can use the `builder` parameter to achieve the same goal:
+
+```dart
+class Home extends StatelessWidget {
+  const Home({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return LogicLoader(
+      refs: [usersLogicRef],
+      builder: (context, loading, child) {
+        if (loading) {
+          return const CircularProgressIndicator();
+        }
+
+        // Display the users in a list when have been fetched.
+        final users = context.watch(usersRef);
+        return ListView();
+      },
+      child: const UsersView(),
+    );
+  }
+}
+```
 
 #### Overrides
 

@@ -7,7 +7,7 @@ final homeViewLogicRef = LogicRef((scope) => HomeViewLogic(scope));
 
 final usersRef = StateRef(const <User>[]);
 
-class HomeViewLogic with Logic, BusyLogic {
+class HomeViewLogic with Logic, BusyLogic implements Loadable {
   const HomeViewLogic(this.scope);
 
   @override
@@ -15,6 +15,7 @@ class HomeViewLogic with Logic, BusyLogic {
 
   UserRepository get _userRepository => use(userRepositoryRef);
 
+  @override
   Future<void> load() async {
     busy = true;
     final users = await _userRepository.getUsers();

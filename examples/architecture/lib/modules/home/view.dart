@@ -1,6 +1,5 @@
 import 'package:architecture/core/logics/busy.dart';
 import 'package:architecture/core/widgets/busy_listener.dart';
-import 'package:architecture/core/widgets/logic_loader.dart';
 import 'package:architecture/modules/home/logic.dart';
 import 'package:architecture/modules/user/view.dart';
 import 'package:architecture/refs.dart';
@@ -25,7 +24,7 @@ class HomeView extends StatelessWidget {
         homeViewLogicRef.overrideWithSelf(),
       ],
       child: LogicLoader(
-        loader: (context) => context.use(homeViewLogicRef).load(),
+        refs: [homeViewLogicRef],
         child: BusyListener(
           child: Scaffold(
             appBar: AppBar(

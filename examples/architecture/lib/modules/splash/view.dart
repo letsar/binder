@@ -1,6 +1,5 @@
-import 'package:architecture/core/widgets/logic_loader.dart';
-import 'package:architecture/modules/splash/logic.dart';
 import 'package:architecture/modules/app/route_names.dart' as route_names;
+import 'package:architecture/modules/splash/logic.dart';
 import 'package:binder/binder.dart';
 import 'package:flutter/material.dart';
 
@@ -12,7 +11,7 @@ class SplashView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LogicLoader(
-      loader: (context) => context.use(splashViewLogicRef).load(),
+      refs: [splashViewLogicRef],
       child: StateListener(
         watchable: navigationResultRef,
         onStateChanged: (context, NavigationResult state) {

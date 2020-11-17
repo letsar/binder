@@ -5,7 +5,6 @@ import 'package:binder/binder.dart';
 import 'package:users_devices/models/device.dart';
 
 import 'device_store.dart';
-import 'loadable.dart';
 
 final fakeConnectionRef =
     LogicRef((scope) => FakeConnectionStatusHandler(scope));
@@ -21,7 +20,7 @@ class FakeConnectionStatusHandler with Logic implements Loadable, Disposable {
   final Random _rnd = Random();
 
   @override
-  void load() {
+  Future<void> load() async {
     _timer = Timer(const Duration(seconds: 2), _changeOneConnectionStatus);
   }
 

@@ -254,8 +254,8 @@ class BinderScopeState extends State<BinderScope>
   }
 }
 
-/// Interface for objects that needs to do some action before the [BinderScope]
-/// storing their state is disposed.
+/// Interface for business logic components that need to do some action before
+/// the [BinderScope] storing their state is disposed.
 abstract class Disposable {
   /// Release resources.
   void dispose();

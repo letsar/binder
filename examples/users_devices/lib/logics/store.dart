@@ -1,7 +1,6 @@
 import 'package:binder/binder.dart';
 import 'package:flutter/widgets.dart';
 import 'package:meta/meta.dart';
-import 'package:users_devices/logics/loadable.dart';
 
 import '../models/identifiable.dart';
 
@@ -31,10 +30,8 @@ abstract class Store<T extends Identifiable> with Logic implements Loadable {
 
   @override
   Future<void> load() async {
-    // busy();
     final Iterable<T> all = await fetch();
     state = Map<int, T>.fromEntries(all.map((e) => MapEntry<int, T>(e.id, e)));
-    // idle();
   }
 
   @protected

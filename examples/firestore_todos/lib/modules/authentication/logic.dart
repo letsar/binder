@@ -9,7 +9,7 @@ final authenticationViewLogicRef =
 
 final isAuthenticatedRef = StateRef<bool>(null);
 
-class AuthenticationViewLogic with Logic implements Disposable {
+class AuthenticationViewLogic with Logic implements Loadable, Disposable {
   AuthenticationViewLogic(this.scope);
 
   @override
@@ -20,7 +20,8 @@ class AuthenticationViewLogic with Logic implements Disposable {
   UserRepository get _userRepository => use(userRepositoryRef);
   TodosLogic get _todosLogic => use(todosLogicRef);
 
-  void init() {
+  @override
+  Future<void> load() async {
     _subscription?.cancel();
     _subscription = _userRepository.isAuthenticated.listen((isAuthenticated) {
       write(isAuthenticatedRef, isAuthenticated);

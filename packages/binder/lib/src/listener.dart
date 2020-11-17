@@ -85,7 +85,9 @@ class _ValueListenerState<T> extends State<ValueListener<T>> {
   void didUpdateWidget(ValueListener<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (!widget.equalityComparer(oldWidget.value, widget.value)) {
-      Future.microtask(() => widget.onValueChanged(context, widget.value));
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) => widget.onValueChanged(context, widget.value),
+      );
     }
   }
 
