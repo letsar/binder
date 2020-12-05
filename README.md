@@ -276,7 +276,6 @@ class Home extends StatelessWidget {
         final users = context.watch(usersRef);
         return ListView();
       },
-      child: const UsersView(),
     );
   }
 }
