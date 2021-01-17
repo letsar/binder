@@ -17,6 +17,24 @@ As other state management pattern, **binder** aims to separate the **application
 We can see the whole application state as the agglomeration of a multitude of tiny states. Each state being independent from each other.
 A view can be interested in some particular states and has to use a logic component to update them.
 
+
+
+- [Getting started](#getting-started)
+- [Basic usage](#basic-usage)
+- [Intermediate usage](#intermediate-usage)
+  - [Select](#select)
+  - [Consumer](#consumer)
+  - [LogicLoader](#logicLoader)
+  - [Overrides](#overrides)
+  - [Mocking values in tests](#mocking-values-in-tests)
+- [Advanced usage](#advanced-usage)
+  - [Computed](#computed)
+  - [Observers](#observers)
+  - [Undo/Redo](#undo-redo)
+  - [Disposable](#disposable)
+  - [StateListener](#stateListener)
+- [Snippets](#snippets)
+
 ## Getting started
 
 ### Installation
