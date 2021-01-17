@@ -30,7 +30,7 @@ A view can be interested in some particular states and has to use a logic compon
 - [Advanced usage](#advanced-usage)
   - [Computed](#computed)
   - [Observers](#observers)
-  - [Undo/Redo](#undo-redo)
+  - [Undo/Redo](#undoredo)
   - [Disposable](#disposable)
   - [StateListener](#stateListener)
 - [Snippets](#snippets)
