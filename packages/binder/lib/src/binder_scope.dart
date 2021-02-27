@@ -131,7 +131,6 @@ class BinderScopeState extends State<BinderScope>
 
   @override
   void write<T>(StateRef<T> ref, T state, [Object action]) {
-    addWrittenKey(ref.key);
     writeAndObserve(ref, state, action, []);
   }
 
@@ -156,6 +155,7 @@ class BinderScopeState extends State<BinderScope>
   ) {
     if (isOwner(ref.key)) {
       void applyNewState() {
+        addWrittenKey(ref.key);
         readOnlyKeys.remove(ref.key);
         setState(() {
           states[ref.key] = state;

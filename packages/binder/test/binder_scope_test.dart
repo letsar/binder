@@ -988,5 +988,106 @@ void main() {
         );
       });
     });
+
+    testWidgets('modify a state ref though a child scope', (tester) async {
+      final a = StateRef(1);
+
+      BuildContext ctx;
+      int buildCount = 0;
+      int buildCount2 = 0;
+      int value;
+      int value2;
+
+      final w2 = Builder(
+        builder: (context) {
+          ctx = context;
+          value2 = context.watch(a);
+          buildCount2++;
+          return const SizedBox();
+        },
+      );
+
+      final w1 = Builder(
+        builder: (context) {
+          value = context.watch(a);
+          buildCount++;
+          return BinderScope(child: w2);
+        },
+      );
+
+      await tester.pumpWidget(
+        BinderScope(
+          child: w1,
+        ),
+      );
+
+      expect(buildCount, 1);
+      expect(value, 1);
+      expect(buildCount2, 1);
+      expect(value2, 1);
+
+      ctx.write(a, 2);
+      await tester.pump();
+
+      expect(buildCount, 2);
+      expect(value, 2);
+      expect(buildCount2, 2);
+      expect(value2, 2);
+    });
+
+    testWidgets('watch a computed though a child scope', (tester) async {
+      final a = StateRef(1);
+      final b = StateRef(StateRef(0));
+      final c = Computed((watch) {
+        return watch(watch(b)) + 1;
+      });
+
+      BuildContext ctx;
+      int buildCount = 0;
+      int buildCount2 = 0;
+      int value;
+      int value2;
+
+      final w2 = Builder(
+        builder: (context) {
+          ctx = context;
+          value2 = context.watch(c);
+          buildCount2++;
+          return const SizedBox();
+        },
+      );
+
+      final wb = BinderScope(
+        overrides: [b.overrideWith(a)],
+        child: w2,
+      );
+
+      final w1 = Builder(
+        builder: (context) {
+          value = context.watch(a);
+          buildCount++;
+          return wb;
+        },
+      );
+
+      await tester.pumpWidget(
+        BinderScope(
+          child: w1,
+        ),
+      );
+
+      expect(buildCount, 1);
+      expect(value, 1);
+      expect(buildCount2, 1);
+      expect(value2, 2);
+
+      ctx.write(a, 2);
+      await tester.pump();
+
+      expect(buildCount, 2);
+      expect(value, 2);
+      expect(buildCount2, 2);
+      expect(value2, 3);
+    });
   });
 }
