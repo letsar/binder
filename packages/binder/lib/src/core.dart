@@ -54,7 +54,7 @@ abstract class Scope {
   /// {@template binder.scope.read}
   /// Gets the current state referenced by [ref].
   /// {@endtemplate}
-  T read<T>(Watchable<T> ref);
+  T read<T>(Watchable<T> ref, List<BinderKey> keys);
 
   /// {@template binder.scope.use}
   /// Gets the current logic component referenced by [ref].
@@ -83,15 +83,12 @@ abstract class Watchable<T> {
   final EqualityComparer<T> equalityComparer;
 
   /// Internal use only.
-  List<BinderKey> get keys;
-
-  /// Internal use only.
   bool equals(T oldState, T newState) =>
       _equals(equalityComparer, oldState, newState);
 
   /// Internal use only.
   @visibleForTesting
-  T read(StateReader read);
+  T read(StateReader read, List<BinderKey> keys);
 }
 
 /// A reference to a part of the app state.
@@ -112,21 +109,17 @@ class StateRef<T> extends Watchable<T> {
           BinderKey(name ?? 'StateRef<$T>'),
         );
 
-  StateRef._(
+  const StateRef._(
     this.initialState,
     EqualityComparer<T> equalityComparer,
     this.key,
-  )   : keys = [key],
-        super(equalityComparer);
+  ) : super(equalityComparer);
 
   /// This is the initial value of the state.
   final T initialState;
 
   /// Internal use.
   final BinderKey key;
-
-  @override
-  final List<BinderKey> keys;
 
   /// Overrides this referenced with a new value.
   ///
@@ -136,7 +129,8 @@ class StateRef<T> extends Watchable<T> {
   }
 
   @override
-  T read(StateReader read) {
+  T read(StateReader read, List<BinderKey> keys) {
+    keys?.add(key);
     return read<T>(key, initialState);
   }
 }
@@ -145,24 +139,18 @@ class StateRef<T> extends Watchable<T> {
 class Computed<T> extends Watchable<T> {
   /// Creates a derived state which combine the current state of other parts and
   /// allows any widget to be rebuilt when the underlaying value changes.
-  Computed(
+  const Computed(
     this.stateBuilder, {
     EqualityComparer<T> equalityComparer,
-  })  : keys = <BinderKey>[],
-        super(equalityComparer);
+  }) : super(equalityComparer);
 
   /// The function used to build the state.
   final StateBuilder<T> stateBuilder;
 
   @override
-  final List<BinderKey> keys;
-
-  @override
-  T read(StateReader read) {
-    keys.clear();
+  T read(StateReader read, List<BinderKey> keys) {
     X watch<X>(Watchable<X> p) {
-      keys.addAll(p.keys);
-      return p.read(read);
+      return p.read(read, keys);
     }
 
     return stateBuilder(watch);
@@ -170,22 +158,18 @@ class Computed<T> extends Watchable<T> {
 }
 
 class StateSelector<T, S> extends Watchable<S> {
-  StateSelector(
+  const StateSelector(
     this.ref,
     this.selector,
     EqualityComparer<S> equalityComparer,
-  )   : keys = ref.keys,
-        super(equalityComparer);
+  ) : super(equalityComparer);
 
   final Watchable<T> ref;
   final Selector<T, S> selector;
 
   @override
-  final List<BinderKey> keys;
-
-  @override
-  S read(StateReader read) {
-    return selector(ref.read(read));
+  S read(StateReader read, List<BinderKey> keys) {
+    return selector(ref.read(read, keys));
   }
 }
 

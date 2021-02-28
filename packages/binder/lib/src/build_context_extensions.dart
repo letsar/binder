@@ -1,6 +1,9 @@
+import 'package:binder/src/binder_container.dart';
 import 'package:flutter/widgets.dart';
 
 import 'core.dart';
+
+// ignore_for_file: public_member_api_docs
 
 /// Public extensions on [BuildContext].
 extension BinderBuildContextExtensions on BuildContext {
@@ -14,7 +17,8 @@ extension BinderBuildContextExtensions on BuildContext {
             widget is SliverWithKeepAliveWidget ||
             debugDoingBuild,
         'Cannot call watch() outside a build method.');
-    return watchScope(watchable).read(watchable);
+    final keys = <BinderKey>[];
+    return watchScope(watchable, keys).read(watchable, keys);
   }
 
   /// Reads the current state of the [watchable].
@@ -22,7 +26,7 @@ extension BinderBuildContextExtensions on BuildContext {
   /// Cannot be called while building a widget.
   T read<T>(Watchable<T> watchable) {
     assert(!debugDoingBuild, 'Cannot call read() while building a widget.');
-    return readScope().read(watchable);
+    return readScope().read(watchable, null);
   }
 
   /// Gets the instance of the business logic component referenced by [ref].
@@ -42,8 +46,8 @@ extension BinderBuildContextInternalExtensions on BuildContext {
     );
   }
 
-  Scope watchScope<T>(Watchable<T> ref) {
-    return getBinder(InheritedBinderScope.of(this, Aspect<T>(ref)));
+  Scope watchScope<T>(Watchable<T> ref, List<BinderKey> keys) {
+    return getBinder(InheritedBinderScope.of(this, Aspect<T>(ref, keys)));
   }
 
   static Scope getBinder(InheritedBinderScope inheritedScope) {

@@ -19,12 +19,12 @@ class MockScope extends Mock implements Scope {}
 void main() {
   test('Test your logic by mocking the Binder', () {
     final scope = MockScope();
-    when(scope.read(counterRef)).thenReturn(99);
+    when(scope.read(counterRef, any)).thenReturn(99);
 
     final homeLogic = HomeLogic(scope);
 
     homeLogic.increment();
-    verify(scope.read(counterRef));
+    verify(scope.read(counterRef, any));
     verify(scope.write(counterRef, 100));
   });
 

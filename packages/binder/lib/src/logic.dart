@@ -23,7 +23,7 @@ mixin Logic {
   @protected
   @nonVirtual
   void update<T>(StateRef<T> ref, Updater<T> updater, [Object action]) {
-    scope.write(ref, updater(scope.read(ref)), action);
+    scope.write(ref, updater(scope.read(ref, null)), action);
   }
 
   /// {@macro binder.scope.clear}
@@ -37,7 +37,7 @@ mixin Logic {
   @protected
   @nonVirtual
   T read<T>(Watchable<T> ref) {
-    return scope.read(ref);
+    return scope.read(ref, null);
   }
 
   /// {@macro binder.scope.use}

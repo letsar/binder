@@ -17,18 +17,18 @@ void main() {
   group('Aspect', () {
     test('shouldRebuild returns false if states are considered equals', () {
       when(ref.equals(1, 1)).thenReturn(true);
-      when(ref.read(any)).thenReturn(1);
+      when(ref.read(any, any)).thenReturn(1);
 
-      final aspect = Aspect(ref);
+      final aspect = Aspect(ref, null);
       final shouldRebuild = aspect.shouldRebuild(null, null);
       expect(shouldRebuild, false);
     });
 
     test('shouldRebuild returns true if states are not considered equals', () {
       when(ref.equals(1, 1)).thenReturn(false);
-      when(ref.read(any)).thenReturn(1);
+      when(ref.read(any, any)).thenReturn(1);
 
-      final aspect = Aspect(ref);
+      final aspect = Aspect(ref, null);
       final shouldRebuild = aspect.shouldRebuild(null, null);
       expect(shouldRebuild, true);
     });
@@ -140,7 +140,7 @@ void main() {
       expect(
         newWidget.updateShouldNotifyDependent(
           oldWidget,
-          Dependencies([Aspect<int>(intRef2)]),
+          Dependencies([Aspect<int>(intRef2, null)]),
         ),
         false,
       );
@@ -174,7 +174,9 @@ void main() {
       expect(
         newWidget.updateShouldNotifyDependent(
           oldWidget,
-          Dependencies([Aspect<int>(intRef1)]),
+          Dependencies([
+            Aspect<int>(intRef1, [intRef1.key])
+          ]),
         ),
         false,
       );
@@ -208,7 +210,9 @@ void main() {
       expect(
         newWidget.updateShouldNotifyDependent(
           oldWidget,
-          Dependencies([Aspect<int>(intRef1)]),
+          Dependencies([
+            Aspect<int>(intRef1, [intRef1.key])
+          ]),
         ),
         true,
       );
@@ -246,8 +250,8 @@ void main() {
         newWidget.updateShouldNotifyDependent(
           oldWidget,
           Dependencies([
-            Aspect<int>(intRef1),
-            Aspect<int>(intRef2),
+            Aspect<int>(intRef1, [intRef1.key]),
+            Aspect<int>(intRef2, [intRef2.key]),
           ]),
         ),
         true,
@@ -286,8 +290,8 @@ void main() {
         newWidget.updateShouldNotifyDependent(
           oldWidget,
           Dependencies([
-            Aspect<int>(intRef1),
-            Aspect<int>(intRef2),
+            Aspect<int>(intRef1, [intRef1.key]),
+            Aspect<int>(intRef2, [intRef2.key]),
           ]),
         ),
         false,
@@ -304,8 +308,8 @@ void main() {
         newWidget.updateShouldNotifyDependent(
           oldWidget,
           Dependencies([
-            Aspect<int>(intRef1),
-            Aspect<int>(intRef2),
+            Aspect<int>(intRef1, [intRef1.key]),
+            Aspect<int>(intRef2, [intRef2.key]),
           ]),
         ),
         false,
@@ -322,8 +326,8 @@ void main() {
         newWidget.updateShouldNotifyDependent(
           oldWidget,
           Dependencies([
-            Aspect<int>(intRef1),
-            Aspect<int>(intRef2),
+            Aspect<int>(intRef1, [intRef1.key]),
+            Aspect<int>(intRef2, [intRef2.key]),
           ]),
         ),
         true,

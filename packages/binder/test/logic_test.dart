@@ -36,15 +36,15 @@ void main() {
 
     test('read calls binder.read', () {
       myLogic.read(stateRef);
-      verify(mockScope.read(stateRef));
+      verify(mockScope.read(stateRef, null));
 
       final selector = stateRef.select((state) => state + 3);
       myLogic.read(selector);
-      verify(mockScope.read(selector));
+      verify(mockScope.read(selector, null));
 
       final computed = Computed((watch) => watch(stateRef) + 3);
       myLogic.read(computed);
-      verify(mockScope.read(computed));
+      verify(mockScope.read(computed, null));
     });
 
     test('redo calls binder.redo', () {
@@ -58,11 +58,11 @@ void main() {
     });
 
     test('update calls binder.write with expected arguments', () {
-      when(mockScope.read(stateRef)).thenReturn(4);
+      when(mockScope.read(stateRef, null)).thenReturn(4);
       int updateStateRef(int state) => state + 1;
 
       myLogic.update(stateRef, updateStateRef, 'action');
-      verify(mockScope.read(stateRef));
+      verify(mockScope.read(stateRef, null));
       verify(mockScope.write(stateRef, 5, 'action'));
     });
 

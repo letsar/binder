@@ -111,7 +111,7 @@ void main() {
           return 20 as T;
         }
 
-        expect(intRef.read(read), 20);
+        expect(intRef.read(read, null), 20);
         expect(keyArg, intRef.key);
         expect(initialStateArg, intRef.initialState);
       });
@@ -138,7 +138,7 @@ void main() {
           return 20 as T;
         }
 
-        expect(selector.read(read), 27);
+        expect(selector.read(read, null), 27);
         expect(keyArg, intRef.key);
         expect(initialStateArg, intRef.initialState);
         expect(selectorCalled, true);
@@ -177,7 +177,7 @@ void main() {
           return null;
         }
 
-        expect(computed.read(read), 'Hey 8!');
+        expect(computed.read(read, null), 'Hey 8!');
         expect(
             keyArgs,
             containsAllInOrder(<BinderKey>[

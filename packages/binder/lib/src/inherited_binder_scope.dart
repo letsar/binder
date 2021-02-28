@@ -33,7 +33,7 @@ class InheritedBinderScope extends InheritedWidget {
 
     return dependencies.aspects.where((aspect) {
       // We only test the impacted aspects.
-      return aspect.ref.keys.any((key) => writtenKeys.contains(key));
+      return aspect.keys?.any((key) => writtenKeys.contains(key)) ?? false;
     }).any((aspect) {
       return aspect.shouldRebuild(oldReader, newReader);
     });
@@ -115,13 +115,15 @@ class Dependencies {
 @immutable
 @visibleForTesting
 class Aspect<T> {
-  const Aspect(this.ref);
+  const Aspect(this.ref, this.keys);
 
   final Watchable<T> ref;
 
+  final List<BinderKey> keys;
+
   bool shouldRebuild(StateReader oldReader, StateReader newReader) {
-    final T oldState = ref.read(oldReader);
-    final T newState = ref.read(newReader);
+    final T oldState = ref.read(oldReader, null);
+    final T newState = ref.read(newReader, null);
     final bool result = !ref.equals(oldState, newState);
     return result;
   }

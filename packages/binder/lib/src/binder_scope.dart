@@ -203,8 +203,8 @@ class BinderScopeState extends State<BinderScope>
   }
 
   @override
-  T read<T>(Watchable<T> ref) {
-    return ref.read(fetch);
+  T read<T>(Watchable<T> ref, List<BinderKey> keys) {
+    return ref.read(fetch, keys);
   }
 
   @override
@@ -217,7 +217,7 @@ class BinderScopeState extends State<BinderScope>
   }
 
   MementoObserver _readMemento() {
-    final memento = read(mementoRef);
+    final memento = read(mementoRef, null);
     assert(memento != null, 'There is no MementoScope above this context');
     return memento;
   }

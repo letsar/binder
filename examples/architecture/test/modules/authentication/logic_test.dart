@@ -28,7 +28,7 @@ void main() {
   group('AuthenticationViewLogic', () {
     test('username reads and writes to usernameRef ', () {
       logic.username;
-      verify(mockScope.read(usernameRef));
+      verify(mockScope.read(usernameRef, any));
 
       logic.username = 'test';
       verify(mockScope.write(usernameRef, 'test'));
@@ -36,7 +36,7 @@ void main() {
 
     test('password reads and writes to passwordRef ', () {
       logic.password;
-      verify(mockScope.read(passwordRef));
+      verify(mockScope.read(passwordRef, any));
 
       logic.password = 'test';
       verify(mockScope.write(passwordRef, 'test'));
@@ -44,7 +44,7 @@ void main() {
 
     test('rememberMe reads and writes to rememberMeRef ', () {
       logic.rememberMe;
-      verify(mockScope.read(rememberMeRef));
+      verify(mockScope.read(rememberMeRef, any));
 
       logic.rememberMe = false;
       verify(mockScope.write(rememberMeRef, false));
