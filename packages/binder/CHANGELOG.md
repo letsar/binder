@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.3.1]
 ### Fixed
 - Issue when watching a computed which uses an overriden ref of ref.
+- Flutter upper bound.
 
 ## [0.3.0]
 ### Fixed
