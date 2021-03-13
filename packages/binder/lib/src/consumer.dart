@@ -1,5 +1,7 @@
-import 'package:binder/binder.dart';
 import 'package:flutter/widgets.dart';
+
+import 'build_context_extensions.dart';
+import 'core.dart';
 
 /// A widget whose content stays synced with a [Watchable].
 ///

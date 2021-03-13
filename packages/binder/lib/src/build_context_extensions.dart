@@ -1,6 +1,6 @@
-import 'package:binder/src/binder_container.dart';
 import 'package:flutter/widgets.dart';
 
+import 'binder_container.dart';
 import 'core.dart';
 
 // ignore_for_file: public_member_api_docs

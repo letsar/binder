@@ -1,6 +1,6 @@
-import 'package:binder/src/binder_container.dart';
 import 'package:flutter/widgets.dart';
 
+import 'binder_container.dart';
 import 'core.dart';
 import 'observer.dart';
 
