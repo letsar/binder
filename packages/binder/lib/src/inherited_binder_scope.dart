@@ -122,9 +122,11 @@ class Aspect<T> {
   final List<BinderKey> keys;
 
   bool shouldRebuild(StateReader oldReader, StateReader newReader) {
-    final T oldState = ref.read(oldReader, null);
-    final T newState = ref.read(newReader, null);
-    final bool result = !ref.equals(oldState, newState);
-    return result;
+    final List<BinderKey> oldKeys = <BinderKey>[];
+    final List<BinderKey> newKeys = <BinderKey>[];
+    final T oldState = ref.read(oldReader, oldKeys);
+    final T newState = ref.read(newReader, newKeys);
+    final bool valuesAreDifferent = !ref.equals(oldState, newState);
+    return valuesAreDifferent || !listEquals(oldKeys, newKeys);
   }
 }

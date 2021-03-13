@@ -235,4 +235,70 @@ void main() {
     expect(buildCount, 2);
     expect(value, 2);
   });
+
+  testWidgets(
+      'Given a StateRef<StateRef> which final value is watched by a computed, '
+      'When the inner StateRef changes but not inner value, '
+      'Then the computed should be updated as well', (tester) async {
+    final a = StateRef<int>(1);
+    final b = StateRef<StateRef<int>>(a);
+    final c = Computed<int>((watch) {
+      final value = watch(watch(b));
+      return value * 10;
+    });
+
+    BuildContext ctx;
+    int buildCount = 0;
+    int value;
+
+    final w2 = Builder(
+      builder: (context) {
+        ctx = context;
+        buildCount++;
+        value = context.watch(c);
+        return const SizedBox();
+      },
+    );
+
+    final w1 = Builder(
+      builder: (context) {
+        final valueA = context.watch(a);
+        final stateRef = StateRef(valueA);
+        return BinderScope(
+          overrides: [
+            b.overrideWith(stateRef),
+          ],
+          child: w2,
+        );
+      },
+    );
+
+    await tester.pumpWidget(
+      BinderScope(
+        child: w1,
+      ),
+    );
+
+    expect(buildCount, 1);
+    expect(value, 10);
+
+    ctx.write(a, 2);
+    await tester.pump();
+
+    expect(buildCount, 2);
+    expect(value, 20);
+
+    final otherStateRef = StateRef(2);
+    ctx.write(b, otherStateRef);
+    await tester.pump();
+
+    expect(buildCount, 3);
+    expect(value, 20);
+
+    ctx.write(otherStateRef, 3);
+    await tester.pump();
+
+    expect(buildCount, 4);
+    expect(value, 30);
+  });
 }

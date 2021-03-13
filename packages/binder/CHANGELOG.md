@@ -7,9 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.1]
+### Fixed
+- Issue when watching a computed which uses an overriden ref of ref.
+
 ## [0.3.0]
 ### Fixed
-- Issue when watching a computed which used a overriden ref multiple times.
+- Issue when watching a computed which uses an overriden ref multiple times.
 
 ## [0.2.3]
 ### Fixed
@@ -54,7 +58,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Initial release.
 
-[Unreleased]: https://github.com/letsar/binder/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/letsar/binder/compare/v0.3.1...HEAD
+[0.3.1]: https://github.com/letsar/binder/compare/releases/tag/v0.3.1
 [0.3.0]: https://github.com/letsar/binder/compare/releases/tag/v0.3.0
 [0.2.3]: https://github.com/letsar/binder/compare/releases/tag/v0.2.3
 [0.2.2]: https://github.com/letsar/binder/compare/releases/tag/v0.2.2
