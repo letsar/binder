@@ -1,7 +1,6 @@
 import 'package:binder/src/build_context_extensions.dart';
 import 'package:binder/src/core.dart';
 import 'package:binder/src/logic.dart';
-import 'package:binder/src/memento.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 

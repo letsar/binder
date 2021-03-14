@@ -1,8 +1,4 @@
-import 'package:flutter/widgets.dart';
-
-import 'binder_container.dart';
-import 'core.dart';
-import 'observer.dart';
+part of 'core.dart';
 
 /// Internal use.
 final mementoRef = StateRef<MementoObserver>(null);

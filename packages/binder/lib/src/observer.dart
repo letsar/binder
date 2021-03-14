@@ -1,4 +1,4 @@
-import 'core.dart';
+part of 'core.dart';
 
 typedef OnStateUpdated = bool Function<T>(
   StateRef<T> ref,

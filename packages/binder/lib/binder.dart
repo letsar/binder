@@ -8,14 +8,15 @@ export 'src/core.dart'
         BinderOverride,
         BinderScope,
         Computed,
+        DelegatingStateObserver,
         Disposable,
         LogicRef,
+        MementoScope,
         StateRef,
+        StateObserver,
         WatchableExtensions,
         Watchable;
 export 'src/listener.dart' show StateListener, ValueListener;
 export 'src/logic.dart' show Logic;
 export 'src/logic_loader.dart'
     show Loadable, LoadableWidgetBuilder, LogicLoader;
-export 'src/memento.dart' show MementoScope;
-export 'src/observer.dart' show StateObserver, DelegatingStateObserver;
