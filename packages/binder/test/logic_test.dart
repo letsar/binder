@@ -2,11 +2,10 @@ import 'package:binder/src/core.dart';
 import 'package:binder/src/logic.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 
 // ignore_for_file: invalid_use_of_protected_member
-
-class MockScope extends Mock implements Scope {}
+// ignore_for_file: unrelated_type_equality_checks
 
 class MyLogic with Logic {
   const MyLogic(this.scope);
@@ -17,63 +16,82 @@ class MyLogic with Logic {
 
 class MockLogic extends Mock with Logic implements Disposable {}
 
-Scope mockScope;
-MyLogic myLogic;
-final stateRef = StateRef(0);
+final mockScope = MockScope();
+final myLogic = MyLogic(mockScope);
+final stateRef = StateRef(0, name: 'my_state_ref');
 final logicRef = LogicRef((scope) => null);
 
 void main() {
   setUp(() {
-    mockScope = MockScope();
-    myLogic = MyLogic(mockScope);
+    mockScope.reset();
   });
 
   group('Logic', () {
     test('clear calls binder.clear', () {
+      final logs = <String>[];
+      mockScope.onClear = <T>(ref) => logs.add('clear ${ref.key.name}');
       myLogic.clear(stateRef);
-      verify(mockScope.clear(stateRef));
+      expect(logs, ['clear my_state_ref']);
     });
 
     test('read calls binder.read', () {
+      final logs = <bool>[];
+
+      mockScope.onRead = <T>(watchable) => logs.add(watchable == stateRef);
       myLogic.read(stateRef);
-      verify(mockScope.read(stateRef, null));
+      expect(logs, [true]);
+      logs.clear();
 
       final selector = stateRef.select((state) => state + 3);
+      mockScope.onRead = <T>(watchable) => logs.add(watchable == selector);
       myLogic.read(selector);
-      verify(mockScope.read(selector, null));
+      expect(logs, [true]);
+      logs.clear();
 
       final computed = Computed((watch) => watch(stateRef) + 3);
+      mockScope.onRead = <T>(watchable) => logs.add(watchable == computed);
       myLogic.read(computed);
-      verify(mockScope.read(computed, null));
+      expect(logs, [true]);
     });
 
     test('redo calls binder.redo', () {
+      var called = false;
+      mockScope.onRedo = () => called = true;
       myLogic.redo();
-      verify(mockScope.redo());
+      expect(called, true);
     });
 
     test('undo calls binder.undo', () {
+      var called = false;
+      mockScope.onUndo = () => called = true;
       myLogic.undo();
-      verify(mockScope.undo());
+      expect(called, true);
     });
 
     test('update calls binder.write with expected arguments', () {
-      when(mockScope.read(stateRef, null)).thenReturn(4);
-      int updateStateRef(int state) => state + 1;
+      final logs = <String>[];
+      mockScope.onWrite = <T>(ref, state, action) => logs.add('$action $state');
+      int updateStateRef(int state) => state + 5;
 
       myLogic.update(stateRef, updateStateRef, 'action');
-      verify(mockScope.read(stateRef, null));
-      verify(mockScope.write(stateRef, 5, 'action'));
+      expect(mockScope.read(stateRef, null), 5);
+      expect(logs, ['action 5']);
     });
 
     test('use calls binder.use', () {
+      var called = false;
+      mockScope.onUse = <T>(_) => called = true;
       myLogic.use(logicRef);
-      verify(mockScope.use(logicRef));
+      expect(called, true);
     });
 
     test('write calls binder.write', () {
+      final logs = <String>[];
+      mockScope.onWrite = <T>(ref, state, action) {
+        logs.add('${ref.key.name} $state');
+      };
       myLogic.write(stateRef, 8);
-      verify(mockScope.write(stateRef, 8));
+      expect(logs, ['my_state_ref 8']);
     });
 
     testWidgets('dispose called after BinderScope disposed', (tester) async {
@@ -88,7 +106,7 @@ void main() {
 
       await tester.pumpWidget(const SizedBox());
 
-      verify(mockLogic.dispose());
+      verify(() => mockLogic.dispose());
     });
   });
 }

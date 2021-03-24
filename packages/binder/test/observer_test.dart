@@ -8,7 +8,7 @@ void main() {
     testWidgets(
       'An observer should be called for every changes with expected parameters',
       (tester) async {
-        BuildContext ctx;
+        late BuildContext ctx;
         final logs = <String>[];
 
         final counterRef = StateRef(0, name: 'counter');
@@ -17,7 +17,7 @@ void main() {
           StateRef<T> ref,
           T oldState,
           T newState,
-          Object action,
+          Object? action,
         ) {
           logs.add(
             '[${ref.key.name}#$action] changed from $oldState to $newState',
@@ -53,7 +53,7 @@ void main() {
     testWidgets(
       'An observer should be called for every changes that occurs below it',
       (tester) async {
-        BuildContext ctx;
+        late BuildContext ctx;
         final logs = <String>[];
 
         final counterRef = StateRef(0, name: 'counter');
@@ -62,7 +62,7 @@ void main() {
           StateRef<T> ref,
           T oldState,
           T newState,
-          Object action,
+          Object? action,
         ) {
           logs.add('[${ref.key.name}] changed from $oldState to $newState');
           return true;

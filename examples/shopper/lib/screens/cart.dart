@@ -88,9 +88,9 @@ class _CartTotal extends StatelessWidget {
             //
             // The important thing is that it will not rebuild
             // the rest of the widgets in this build method.
-            Consumer(
+            Consumer<int>(
               watchable: totalPriceRef,
-              builder: (context, int totalPrice, child) =>
+              builder: (BuildContext context, int totalPrice, Widget child) =>
                   Text('\$$totalPrice', style: hugeStyle),
             ),
             const SizedBox(width: 24),

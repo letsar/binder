@@ -12,7 +12,7 @@ mixin Logic {
   /// {@macro binder.scope.write}
   @protected
   @nonVirtual
-  void write<T>(StateRef<T> ref, T state, [Object action]) {
+  void write<T>(StateRef<T> ref, T state, [Object? action]) {
     scope.write(ref, state, action);
   }
 
@@ -22,7 +22,7 @@ mixin Logic {
   /// An optional [action] can be send to track which method did the update.
   @protected
   @nonVirtual
-  void update<T>(StateRef<T> ref, Updater<T> updater, [Object action]) {
+  void update<T>(StateRef<T> ref, Updater<T> updater, [Object? action]) {
     scope.write(ref, updater(scope.read(ref, null)), action);
   }
 

@@ -14,7 +14,7 @@ void main() {
 
     test('isOwner returns true if the key exists', () {
       const key = BinderKey('');
-      const parent = BinderContainer(null, null);
+      const parent = BinderContainer(<BinderKey, Object?>{}, null);
       const container = BinderContainer({key: 0}, parent);
       final isContainer = container.isOwner(key);
       expect(isContainer, true);
@@ -24,7 +24,7 @@ void main() {
         'isOwner returns false if the key does not exist and parent is not null',
         () {
       const key = BinderKey('');
-      const parent = BinderContainer(null, null);
+      const parent = BinderContainer(<BinderKey, Object?>{}, null);
       const container = BinderContainer(empty, parent);
       final isContainer = container.isOwner(key);
       expect(isContainer, false);

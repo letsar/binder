@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key key}) : super(key: key);
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +17,7 @@ final indexRef = StateRef(0);
 
 class HomeView extends StatelessWidget {
   const HomeView({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -72,7 +72,7 @@ class CountersLogic with Logic {
 }
 
 class SumView extends StatelessWidget {
-  const SumView({Key key}) : super(key: key);
+  const SumView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -103,7 +103,7 @@ class SumView extends StatelessWidget {
 }
 
 class CounterView extends StatelessWidget {
-  const CounterView({Key key}) : super(key: key);
+  const CounterView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

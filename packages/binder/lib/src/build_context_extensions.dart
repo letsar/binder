@@ -42,7 +42,7 @@ extension BinderBuildContextInternalExtensions on BuildContext {
   Scope readScope() {
     return getBinder(
       getElementForInheritedWidgetOfExactType<InheritedBinderScope>()?.widget
-          as InheritedBinderScope,
+          as InheritedBinderScope?,
     );
   }
 
@@ -50,14 +50,14 @@ extension BinderBuildContextInternalExtensions on BuildContext {
     return getBinder(InheritedBinderScope.of(this, Aspect<T>(ref, keys)));
   }
 
-  static Scope getBinder(InheritedBinderScope inheritedScope) {
+  static Scope getBinder(InheritedBinderScope? inheritedScope) {
     if (inheritedScope == null) {
       throw StateError('No BinderScope found');
     }
-    return inheritedScope?.scope;
+    return inheritedScope.scope;
   }
 
-  void write<X>(StateRef<X> ref, X state, [Object action]) {
+  void write<X>(StateRef<X> ref, X state, [Object? action]) {
     assert(!debugDoingBuild, 'Cannot use write while building a widget.');
     readScope().write(ref, state, action);
   }

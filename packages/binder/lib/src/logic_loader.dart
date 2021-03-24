@@ -15,7 +15,7 @@ abstract class Loadable {
 typedef LoadableWidgetBuilder = Widget Function(
   BuildContext context,
   bool loading,
-  Widget child,
+  Widget? child,
 );
 
 /// A widget which can be used to load resources when it's inserted in the tree.
@@ -32,12 +32,11 @@ class LogicLoader extends StatefulWidget {
   /// If [builder] is set, [child] can be used as a subtree that does not
   /// depends on the loading argument.
   const LogicLoader({
-    Key key,
+    Key? key,
     this.refs = const <LogicRef<Loadable>>[],
     this.builder,
     this.child,
-  })  : assert(refs != null),
-        assert(
+  })  : assert(
           child != null || builder != null,
           'Either child or builder must be not null',
         ),
@@ -49,11 +48,11 @@ class LogicLoader extends StatefulWidget {
 
   /// The builder that creates a child to display in this widget, which will
   /// use the provided loading state to show whether data is being fetched.
-  final LoadableWidgetBuilder builder;
+  final LoadableWidgetBuilder? builder;
 
   /// The widget to pass to [builder] if it's not null, or the child to
   /// directly display in this widget.
-  final Widget child;
+  final Widget? child;
 
   @override
   _LogicLoaderState createState() => _LogicLoaderState();
@@ -70,7 +69,7 @@ class _LogicLoaderState extends State<LogicLoader> {
     // rebuild a parent here.
     // The counter part, is that the actual rebuild will occur in two frames
     // and not in the next one.
-    WidgetsBinding.instance.addPostFrameCallback((_) => load());
+    WidgetsBinding.instance!.addPostFrameCallback((_) => load());
   }
 
   Future<void> load() async {
@@ -88,10 +87,11 @@ class _LogicLoaderState extends State<LogicLoader> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.builder != null) {
-      return widget.builder(context, loading, widget.child);
+    final builder = widget.builder;
+    if (builder != null) {
+      return builder(context, loading, widget.child);
     }
 
-    return widget.child;
+    return widget.child!;
   }
 }

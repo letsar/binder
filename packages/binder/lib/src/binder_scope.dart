@@ -13,14 +13,11 @@ class BinderScope extends StatefulWidget {
   ///
   /// [overrides], [observers] and [child] must not be null.
   const BinderScope({
-    Key key,
+    Key? key,
     this.overrides = const [],
     this.observers = const [],
-    @required this.child,
-  })  : assert(overrides != null),
-        assert(observers != null),
-        assert(child != null),
-        super(key: key);
+    required this.child,
+  }) : super(key: key);
 
   /// List of objects that are redefining the meaning of refs.
   /// It can also be useful for test purposes.
@@ -58,10 +55,10 @@ class BinderScopeState extends State<BinderScope>
   bool clearScheduled = false;
 
   @override
-  BinderScopeState parent;
+  BinderScopeState? parent;
 
   @override
-  Map<BinderKey, Object> states = <BinderKey, Object>{};
+  Map<BinderKey, Object?> states = <BinderKey, Object?>{};
 
   @override
   void initState() {
@@ -76,7 +73,7 @@ class BinderScopeState extends State<BinderScope>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    parent = InheritedBinderScope.of(context)?.scope as BinderScopeState;
+    parent = InheritedBinderScope.of(context)?.scope as BinderScopeState?;
   }
 
   @override
@@ -88,9 +85,8 @@ class BinderScopeState extends State<BinderScope>
 
     oldOverrides.forEach((oldOverride) {
       final key = oldOverride.key;
-      final newOverride = newOverrides.firstWhere(
+      final newOverride = newOverrides.firstWhereOrNull(
         (x) => x.key == key,
-        orElse: () => null,
       );
       if (newOverride != null) {
         // We have to update the state only if the state has never been written.
@@ -130,7 +126,7 @@ class BinderScopeState extends State<BinderScope>
   }
 
   @override
-  void write<T>(StateRef<T> ref, T state, [Object action]) {
+  void write<T>(StateRef<T> ref, T state, [Object? action]) {
     writeAndObserve(ref, state, action, []);
   }
 
@@ -138,7 +134,7 @@ class BinderScopeState extends State<BinderScope>
     writtenKeys.add(key);
     if (!clearScheduled) {
       clearScheduled = true;
-      SchedulerBinding.instance.addPostFrameCallback((_) {
+      SchedulerBinding.instance!.addPostFrameCallback((_) {
         clearScheduled = false;
         writtenKeys.clear();
       });
@@ -150,8 +146,8 @@ class BinderScopeState extends State<BinderScope>
   void writeAndObserve<T>(
     StateRef<T> ref,
     T state,
-    Object action,
-    List<StateObserver> observers,
+    Object? action,
+    List<StateObserver?> observers,
   ) {
     if (isOwner(ref.key)) {
       void applyNewState() {
@@ -172,11 +168,11 @@ class BinderScopeState extends State<BinderScope>
             : ref.initialState;
         applyNewState();
         effectiveObservers.any((observer) {
-          return observer.didChanged(ref, oldState, state, action);
+          return observer!.didChanged(ref, oldState, state, action);
         });
       }
     } else {
-      parent.writeAndObserve(
+      parent!.writeAndObserve(
         ref,
         state,
         action,
@@ -198,12 +194,12 @@ class BinderScopeState extends State<BinderScope>
         states.remove(key);
       });
     } else {
-      parent.clear(ref);
+      parent!.clear(ref);
     }
   }
 
   @override
-  T read<T>(Watchable<T> ref, List<BinderKey> keys) {
+  T read<T>(Watchable<T> ref, List<BinderKey>? keys) {
     return ref.read(fetch, keys);
   }
 
@@ -212,21 +208,21 @@ class BinderScopeState extends State<BinderScope>
     if (isOwner(ref.key)) {
       return states.putIfAbsent(ref.key, () => ref.create(this)) as T;
     } else {
-      return parent.use(ref);
+      return parent!.use(ref);
     }
   }
 
-  MementoObserver _readMemento() {
+  MementoObserver? _readMemento() {
     final memento = read(mementoRef, null);
     assert(memento != null, 'There is no MementoScope above this context');
     return memento;
   }
 
   @override
-  void undo() => _readMemento().undo(this);
+  void undo() => _readMemento()?.undo(this);
 
   @override
-  void redo() => _readMemento().redo(this);
+  void redo() => _readMemento()?.redo(this);
 
   @override
   bool get wantKeepAlive => true;
@@ -261,8 +257,8 @@ abstract class Disposable {
   void dispose();
 }
 
-extension on Map<BinderKey, Object> {
-  Map<BinderKey, Object> clone() => Map<BinderKey, Object>.from(this);
+extension on Map<BinderKey, Object?> {
+  Map<BinderKey, Object?> clone() => Map<BinderKey, Object?>.from(this);
 }
 
 extension on List<BinderOverride> {

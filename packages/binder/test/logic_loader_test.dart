@@ -23,24 +23,6 @@ class MyLogic implements Loadable {
 void main() {
   group('LogicLoader', () {
     test('constructor assertions', () {
-      expect(
-        () => LogicLoader(
-          refs: null,
-          builder: (a, b, c) => c,
-          child: const SizedBox(),
-        ),
-        throwsAssertionError,
-      );
-
-      expect(
-        () => LogicLoader(
-          refs: const [],
-          builder: null,
-          child: null,
-        ),
-        throwsAssertionError,
-      );
-
       const LogicLoader(
         refs: [],
         builder: null,
@@ -49,7 +31,7 @@ void main() {
 
       LogicLoader(
         refs: const [],
-        builder: (a, b, c) => c,
+        builder: (a, b, c) => c!,
         child: null,
       );
     });
@@ -94,7 +76,7 @@ void main() {
             refs: const [],
             builder: (context, loading, child) {
               expect(child, widget);
-              return child;
+              return child!;
             },
             child: widget,
           ),
@@ -105,7 +87,7 @@ void main() {
     });
 
     testWidgets('builder can have a null child', (tester) async {
-      Widget widget;
+      Widget? widget;
 
       await tester.pumpWidget(
         BinderScope(
@@ -127,7 +109,7 @@ void main() {
       final logic = MyLogic();
       final logicRef = LogicRef((scope) => logic);
       int buildCount = 0;
-      bool isLoading;
+      late bool isLoading;
 
       await tester.pumpWidget(
         BinderScope(
@@ -162,7 +144,7 @@ void main() {
       final logic02 = MyLogic();
       final logic02Ref = LogicRef((scope) => logic02);
       int buildCount = 0;
-      bool isLoading;
+      late bool isLoading;
 
       await tester.pumpWidget(
         BinderScope(

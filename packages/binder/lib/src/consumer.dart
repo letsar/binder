@@ -29,13 +29,11 @@ class Consumer<T> extends StatelessWidget {
   /// The [child] is optional but is good practice to use if part of the widget
   /// subtree does not depend on the value of the [watchable].
   const Consumer({
-    Key key,
-    @required this.watchable,
-    @required this.builder,
+    Key? key,
+    required this.watchable,
+    required this.builder,
     this.child,
-  })  : assert(watchable != null),
-        assert(builder != null),
-        super(key: key);
+  }) : super(key: key);
 
   /// The [Watchable] whose state you depend on, in order to build.
   /// This can be a [StateRef], a [Computed], but you can also use it with
@@ -62,7 +60,7 @@ class Consumer<T> extends StatelessWidget {
   /// the [builder] builds depends on the value of the [watchable]. For
   /// example, if the [watchable]'s state is a [String] and the [builder] simply
   /// returns a [Text] widget with the [String] value.
-  final Widget child;
+  final Widget? child;
 
   @override
   Widget build(BuildContext context) {

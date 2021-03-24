@@ -36,9 +36,9 @@ class _AppState extends State<App> {
       theme: theme,
       navigatorKey: _navigatorKey,
       builder: (context, child) {
-        return StateListener(
+        return StateListener<User>(
           watchable: currentUserRef,
-          onStateChanged: (context, User user) {
+          onStateChanged: (BuildContext context, User user) {
             if (user == User.empty) {
               _navigator.pushAndRemoveUntil<void>(
                 SignInView.route(),

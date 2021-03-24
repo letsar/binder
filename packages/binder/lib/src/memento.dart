@@ -1,22 +1,19 @@
 part of 'core.dart';
 
 /// Internal use.
-final mementoRef = StateRef<MementoObserver>(null);
+final mementoRef = StateRef<MementoObserver?>(null);
 
-/// A scope where state chances a watched so that they can be undone/redone.
+/// A scope where state changes are watched so that they can be undone/redone.
 class MementoScope extends StatefulWidget {
   /// Creates a scope under which you can use undo/redo methods.
   ///
   /// The parameters [maxCapacity], [refs] and [child] must no be null.
   const MementoScope({
-    Key key,
+    Key? key,
     this.maxCapacity = 256,
     this.refs = const [],
-    @required this.child,
-  })  : assert(maxCapacity != null),
-        assert(child != null),
-        assert(refs != null),
-        super(key: key);
+    required this.child,
+  }) : super(key: key);
 
   /// The maximum number of changes watched by this scope.
   /// Defaults to 256.
@@ -34,16 +31,10 @@ class MementoScope extends StatefulWidget {
 }
 
 class _MementoScopeState extends State<MementoScope> {
-  MementoObserver memento;
-
-  @override
-  void initState() {
-    super.initState();
-    memento = MementoObserver(
-      maxCapacity: widget.maxCapacity,
-      keys: widget.refs.map((e) => e.key).toSet(),
-    );
-  }
+  late final MementoObserver memento = MementoObserver(
+    maxCapacity: widget.maxCapacity,
+    keys: widget.refs.map((e) => e.key).toSet(),
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +49,7 @@ class _MementoScopeState extends State<MementoScope> {
 class MementoObserver implements StateObserver {
   MementoObserver({
     int maxCapacity = 256,
-    this.keys,
+    this.keys = const <BinderKey>{},
   })  : _undoStack = EvictingQueue<_Variation>(maxCapacity),
         _redoStack = EvictingQueue<_Variation>(maxCapacity);
 
@@ -82,8 +73,13 @@ class MementoObserver implements StateObserver {
     }
   }
 
+  void clear() {
+    _undoStack.clear();
+    _redoStack.clear();
+  }
+
   @override
-  bool didChanged<X>(StateRef<X> ref, X oldState, X newState, Object action) {
+  bool didChanged<X>(StateRef<X> ref, X oldState, X newState, Object? action) {
     if (action is! MementoAction && (keys.isEmpty || keys.contains(ref.key))) {
       _undoStack.enqueue(_Variation<X>(ref, oldState, newState, action));
       _redoStack.clear();
@@ -98,7 +94,7 @@ class _Variation<T> {
   final StateRef<T> ref;
   final T oldState;
   final T newState;
-  final Object action;
+  final Object? action;
 
   void undo(Scope scope) {
     scope.write(ref, oldState, UndoAction(action));
@@ -113,7 +109,7 @@ class _Variation<T> {
 abstract class MementoAction {
   const MementoAction._(
     this._name,
-    Object action,
+    Object? action,
   ) : action = action ?? '';
 
   final String _name;
@@ -130,13 +126,13 @@ abstract class MementoAction {
 /// The action wrapping the action to undo.
 class UndoAction extends MementoAction {
   @visibleForTesting
-  const UndoAction(Object action) : super._('undo', action);
+  const UndoAction(Object? action) : super._('undo', action);
 }
 
 /// The action wrapping the action to redo.
 class RedoAction extends MementoAction {
   @visibleForTesting
-  const RedoAction(Object action) : super._('redo', action);
+  const RedoAction(Object? action) : super._('redo', action);
 }
 
 /// A queue which have a predetermined maximum capacity. The oldest element is
@@ -144,7 +140,7 @@ class RedoAction extends MementoAction {
 class EvictingQueue<T> {
   /// Creates a queue with the specified [maxCapacity].
   EvictingQueue([this.maxCapacity = _defaultMaxCapacity])
-      : assert(maxCapacity != null && maxCapacity > 0),
+      : assert(maxCapacity > 0),
         _items = <T>[],
         _tail = 0;
 

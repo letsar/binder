@@ -12,9 +12,9 @@ class SplashView extends StatelessWidget {
   Widget build(BuildContext context) {
     return LogicLoader(
       refs: [splashViewLogicRef],
-      child: StateListener(
+      child: StateListener<NavigationResult>(
         watchable: navigationResultRef,
-        onStateChanged: (context, NavigationResult state) {
+        onStateChanged: (BuildContext context, NavigationResult state) {
           final navigator = Navigator.of(context);
           if (state is NavigateToHome) {
             navigator.pushReplacementNamed(route_names.home);

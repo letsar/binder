@@ -12,11 +12,11 @@ class SignUpForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StateListener(
+    return StateListener<SignUpResult>(
       watchable: signUpResultRef,
-      onStateChanged: (context, SignUpResult state) {
+      onStateChanged: (BuildContext context, SignUpResult state) {
         if (state is SignUpFailure) {
-          Scaffold.of(context)
+          ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
               const SnackBar(content: Text('Sign Up Failure')),

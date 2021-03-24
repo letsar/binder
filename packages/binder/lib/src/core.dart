@@ -11,6 +11,7 @@ part 'binder_scope.dart';
 part 'inherited_binder_scope.dart';
 part 'memento.dart';
 part 'observer.dart';
+part 'mocks.dart';
 
 /// Signature for determining whether two states are the same.
 typedef EqualityComparer<T> = bool Function(T a, T b);
@@ -44,7 +45,7 @@ abstract class Scope {
   ///
   /// An optional [action] can be send to track which method did the update.
   /// {@endtemplate}
-  void write<T>(StateRef<T> ref, T state, [Object action]);
+  void write<T>(StateRef<T> ref, T state, [Object? action]);
 
   /// {@template binder.scope.clear}
   /// Removes the state referenced by [ref] from the scope.
@@ -54,7 +55,7 @@ abstract class Scope {
   /// {@template binder.scope.read}
   /// Gets the current state referenced by [ref].
   /// {@endtemplate}
-  T read<T>(Watchable<T> ref, List<BinderKey> keys);
+  T read<T>(Watchable<T> ref, List<BinderKey>? keys);
 
   /// {@template binder.scope.use}
   /// Gets the current logic component referenced by [ref].
@@ -80,7 +81,7 @@ abstract class Watchable<T> {
   const Watchable(this.equalityComparer);
 
   /// The predicate determining if two states are the same.
-  final EqualityComparer<T> equalityComparer;
+  final EqualityComparer<T>? equalityComparer;
 
   /// Internal use only.
   bool equals(T oldState, T newState) =>
@@ -88,7 +89,7 @@ abstract class Watchable<T> {
 
   /// Internal use only.
   @visibleForTesting
-  T read(StateReader read, List<BinderKey> keys);
+  T read(StateReader read, List<BinderKey>? keys);
 }
 
 /// A reference to a part of the app state.
@@ -101,8 +102,8 @@ class StateRef<T> extends Watchable<T> {
   /// A [name] can be provided to this reference for debugging purposes.
   StateRef(
     T initialState, {
-    EqualityComparer<T> equalityComparer,
-    String name,
+    EqualityComparer<T>? equalityComparer,
+    String? name,
   }) : this._(
           initialState,
           equalityComparer,
@@ -111,7 +112,7 @@ class StateRef<T> extends Watchable<T> {
 
   const StateRef._(
     this.initialState,
-    EqualityComparer<T> equalityComparer,
+    EqualityComparer<T>? equalityComparer,
     this.key,
   ) : super(equalityComparer);
 
@@ -129,7 +130,7 @@ class StateRef<T> extends Watchable<T> {
   }
 
   @override
-  T read(StateReader read, List<BinderKey> keys) {
+  T read(StateReader read, List<BinderKey>? keys) {
     keys?.add(key);
     return read<T>(key, initialState);
   }
@@ -141,14 +142,14 @@ class Computed<T> extends Watchable<T> {
   /// allows any widget to be rebuilt when the underlaying value changes.
   const Computed(
     this.stateBuilder, {
-    EqualityComparer<T> equalityComparer,
+    EqualityComparer<T>? equalityComparer,
   }) : super(equalityComparer);
 
   /// The function used to build the state.
   final StateBuilder<T> stateBuilder;
 
   @override
-  T read(StateReader read, List<BinderKey> keys) {
+  T read(StateReader read, List<BinderKey>? keys) {
     X watch<X>(Watchable<X> p) {
       return p.read(read, keys);
     }
@@ -161,14 +162,14 @@ class StateSelector<T, S> extends Watchable<S> {
   const StateSelector(
     this.ref,
     this.selector,
-    EqualityComparer<S> equalityComparer,
+    EqualityComparer<S>? equalityComparer,
   ) : super(equalityComparer);
 
   final Watchable<T> ref;
   final Selector<T, S> selector;
 
   @override
-  S read(StateReader read, List<BinderKey> keys) {
+  S read(StateReader read, List<BinderKey>? keys) {
     return selector(ref.read(read, keys));
   }
 }
@@ -178,7 +179,7 @@ extension WatchableExtensions<T> on Watchable<T> {
   /// Creates a selector on a reference that can be watched.
   Watchable<S> select<S>(
     Selector<T, S> selector, {
-    EqualityComparer<S> equalityComparer,
+    EqualityComparer<S>? equalityComparer,
   }) {
     return StateSelector(this, selector, equalityComparer);
   }
@@ -207,9 +208,8 @@ class LogicRef<T> {
   /// A [name] can be provided to this reference for debugging purposes.
   LogicRef(
     this.create, {
-    String name,
-  })  : assert(create != null),
-        key = BinderKey(name ?? 'LogicRef<$T>');
+    String? name,
+  }) : key = BinderKey(name ?? 'LogicRef<$T>');
 
   /// The function used to generate an instance.
   final InstanceFactory<T> create;
@@ -233,7 +233,7 @@ class LogicRef<T> {
   }
 }
 
-bool _equals<T>(EqualityComparer<T> equalityComparer, T oldState, T newState) {
+bool _equals<T>(EqualityComparer<T>? equalityComparer, T oldState, T newState) {
   if (equalityComparer != null) {
     return equalityComparer(oldState, newState);
   } else {

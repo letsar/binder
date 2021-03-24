@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key key}) : super(key: key);
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +35,7 @@ class CounterViewLogic with Logic {
 }
 
 class CounterView extends StatelessWidget {
-  const CounterView({Key key}) : super(key: key);
+  const CounterView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

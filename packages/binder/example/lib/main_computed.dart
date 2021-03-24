@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key key}) : super(key: key);
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +39,7 @@ final filteredProductsRef = Computed((watch) {
 
 class HomeView extends StatelessWidget {
   const HomeView({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -72,7 +72,7 @@ class FilterViewLogic with Logic {
 
 class FilterView extends StatelessWidget {
   const FilterView({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -95,7 +95,7 @@ class FilterView extends StatelessWidget {
 
 class ProductListView extends StatelessWidget {
   const ProductListView({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override

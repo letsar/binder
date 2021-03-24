@@ -8,8 +8,8 @@ class BinderKey {
 }
 
 mixin BinderContainerMixin {
-  Map<BinderKey, Object> get states;
-  BinderContainerMixin get parent;
+  Map<BinderKey, Object?> get states;
+  BinderContainerMixin? get parent;
 
   bool isOwner(BinderKey key) {
     // We only write in this container if:
@@ -26,7 +26,7 @@ mixin BinderContainerMixin {
         return defaultState;
       }
     } else {
-      return parent.fetch(key, defaultState);
+      return parent!.fetch(key, defaultState);
     }
   }
 }
@@ -36,10 +36,10 @@ class BinderContainer with BinderContainerMixin {
   const BinderContainer(this.states, this.parent);
 
   @override
-  final Map<BinderKey, Object> states;
+  final Map<BinderKey, Object?> states;
 
   @override
-  final BinderContainer parent;
+  final BinderContainer? parent;
 
   @override
   bool operator ==(Object other) {

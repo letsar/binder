@@ -6,26 +6,6 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('ValueWatcher', () {
-    test('constructor assertions', () {
-      expect(
-        () => ValueListener(
-          value: 3,
-          onValueChanged: (_, int __) {},
-          child: null,
-        ),
-        throwsAssertionError,
-      );
-
-      expect(
-        () => ValueListener(
-          value: 3,
-          onValueChanged: null,
-          child: const SizedBox(),
-        ),
-        throwsAssertionError,
-      );
-    });
-
     testWidgets('renders a child', (tester) async {
       await tester.pumpWidget(
         ValueListener(
@@ -71,37 +51,6 @@ void main() {
   });
 
   group('Watcher', () {
-    test('constructor assertions', () {
-      final a = StateRef(0);
-
-      expect(
-        () => StateListener<int>(
-          watchable: null,
-          onStateChanged: (_, int __) {},
-          child: const SizedBox(),
-        ),
-        throwsAssertionError,
-      );
-
-      expect(
-        () => StateListener(
-          watchable: a,
-          onStateChanged: (_, int __) {},
-          child: null,
-        ),
-        throwsAssertionError,
-      );
-
-      expect(
-        () => StateListener(
-          watchable: a,
-          onStateChanged: null,
-          child: const SizedBox(),
-        ),
-        throwsAssertionError,
-      );
-    });
-
     testWidgets('renders a ValueWatcher', (tester) async {
       final a = StateRef(0);
 
@@ -109,7 +58,7 @@ void main() {
         BinderScope(
           child: StateListener(
             watchable: a,
-            onStateChanged: (_, int __) {},
+            onStateChanged: (_, int? __) {},
             child: const SizedBox(),
           ),
         ),
@@ -120,14 +69,14 @@ void main() {
 
     testWidgets('calls onStateChanged when state changed', (tester) async {
       final a = StateRef(0);
-      final logs = <int>[];
-      BuildContext c0;
+      final logs = <int?>[];
+      late BuildContext c0;
 
       await tester.pumpWidget(
         BinderScope(
           child: StateListener(
             watchable: a,
-            onStateChanged: (_, int state) {
+            onStateChanged: (_, int? state) {
               logs.add(state);
             },
             child: Builder(

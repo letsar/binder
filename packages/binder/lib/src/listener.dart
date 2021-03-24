@@ -12,14 +12,11 @@ class StateListener<T> extends StatelessWidget {
   ///
   /// The parameters [watchable], [onStateChanged] and [child] must not be null.
   const StateListener({
-    Key key,
-    @required this.watchable,
-    @required this.onStateChanged,
-    @required this.child,
-  })  : assert(watchable != null),
-        assert(onStateChanged != null),
-        assert(child != null),
-        super(key: key);
+    Key? key,
+    required this.watchable,
+    required this.onStateChanged,
+    required this.child,
+  }) : super(key: key);
 
   /// The reference to watch.
   final Watchable<T> watchable;
@@ -52,14 +49,12 @@ class ValueListener<T> extends StatefulWidget {
   ///
   /// The parameters [onValueChanged] and [child] must not be null.
   const ValueListener({
-    Key key,
-    @required this.value,
-    @required this.onValueChanged,
-    EqualityComparer<T> equalityComparer,
-    @required this.child,
-  })  : assert(onValueChanged != null),
-        assert(child != null),
-        equalityComparer = equalityComparer ?? _defaultEqualityComparer,
+    Key? key,
+    required this.value,
+    required this.onValueChanged,
+    EqualityComparer<T>? equalityComparer,
+    required this.child,
+  })   : equalityComparer = equalityComparer ?? _defaultEqualityComparer,
         super(key: key);
 
   /// The value to listen to changes.
@@ -85,7 +80,7 @@ class _ValueListenerState<T> extends State<ValueListener<T>> {
   void didUpdateWidget(ValueListener<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (!widget.equalityComparer(oldWidget.value, widget.value)) {
-      WidgetsBinding.instance.addPostFrameCallback(
+      WidgetsBinding.instance!.addPostFrameCallback(
         (_) => widget.onValueChanged(context, widget.value),
       );
     }

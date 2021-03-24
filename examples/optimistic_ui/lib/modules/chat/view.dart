@@ -105,10 +105,11 @@ class TextMessageView extends StatelessWidget {
                 onLongPress: () {},
                 child: Container(
                   padding: const EdgeInsets.all(16),
-                  child: Consumer(
+                  child: Consumer<String>(
                     watchable:
                         currentTextMessageRef.select((state) => state.contents),
-                    builder: (context, String value, child) {
+                    builder:
+                        (BuildContext context, String value, Widget child) {
                       return Text(value);
                     },
                   ),

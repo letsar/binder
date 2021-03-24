@@ -10,7 +10,7 @@ void main() {
   group('StateRefBase', () {
     test('areEquals calls equalityComparer if not null', () {
       bool equalsCalled = false;
-      bool equals(int a, int b) {
+      bool equals(int? a, int? b) {
         equalsCalled = true;
         return true;
       }
@@ -55,14 +55,14 @@ void main() {
       });
 
       test('can be null', () {
-        final intRef = StateRef<int>(null);
+        final intRef = StateRef<int?>(null);
         expect(intRef.initialState, null);
       });
     });
 
     group('equalityComparer', () {
       test('is provided through constructor', () {
-        bool equals(int a, int b) => false;
+        bool equals(int? a, int? b) => false;
         final intRef = StateRef(4, equalityComparer: equals);
         expect(intRef.equalityComparer, equals);
       });
@@ -95,15 +95,16 @@ void main() {
       test('always creates the provided state', () {
         final intRef = StateRef(4);
         final override = intRef.overrideWith(6);
-        expect(override.create(null), 6);
+        final scope = BinderScopeState();
+        expect(override.create(scope), 6);
       });
     });
 
     group('read', () {
       test('calls read with the key and initialState', () {
         final intRef = StateRef(4);
-        BinderKey keyArg;
-        int initialStateArg;
+        BinderKey? keyArg;
+        int? initialStateArg;
 
         T read<T>(BinderKey key, T initialState) {
           keyArg = key;
@@ -122,15 +123,15 @@ void main() {
     group('read', () {
       test('calls read with the key and initialState', () {
         bool selectorCalled = false;
-        int selectorStateArg;
+        int? selectorStateArg;
         final intRef = StateRef(4);
         final selector = intRef.select((state) {
           selectorCalled = true;
           selectorStateArg = state;
           return state + 7;
         });
-        BinderKey keyArg;
-        int initialStateArg;
+        BinderKey? keyArg;
+        int? initialStateArg;
 
         T read<T>(BinderKey key, T initialState) {
           keyArg = key;
@@ -160,7 +161,7 @@ void main() {
           return '$stringState $intState!';
         });
         final keyArgs = <BinderKey>[];
-        final initialStateArgs = <Object>[];
+        final initialStateArgs = <Object?>[];
 
         Type typeOf<T>() => T;
 
@@ -174,7 +175,7 @@ void main() {
           if (type == String) {
             return 'Hey' as T;
           }
-          return null;
+          return initialState;
         }
 
         expect(computed.read(read, null), 'Hey 8!');
@@ -196,8 +197,8 @@ void main() {
 
     testWidgets('throws a StackOverlflowError if circular reference',
         (tester) async {
-      Computed<int> computed1;
-      Computed<int> computed2;
+      late Computed<int> computed1;
+      late Computed<int> computed2;
 
       computed1 = Computed((watch) {
         final t = watch(computed2) * 2;
@@ -231,10 +232,6 @@ void main() {
         final intRef = LogicRef(create);
         expect(intRef.create, create);
       });
-
-      test('cannot be null', () {
-        expect(() => LogicRef<int>(null), throwsAssertionError);
-      });
     });
 
     group('key.name', () {
@@ -259,7 +256,8 @@ void main() {
       test('always creates the provided state', () {
         final intRef = LogicRef((scope) => 4);
         final override = intRef.overrideWith((scope) => 6);
-        expect(override.create(null), 6);
+        final scope = BinderScopeState();
+        expect(override.create(scope), 6);
       });
 
       test('can be overriden with the same create', () {
@@ -267,7 +265,8 @@ void main() {
 
         final intRef = LogicRef(create);
         final override = intRef.overrideWithSelf();
-        expect(override.create(null), 4);
+        final scope = BinderScopeState();
+        expect(override.create(scope), 4);
         expect(override.create, create);
       });
     });

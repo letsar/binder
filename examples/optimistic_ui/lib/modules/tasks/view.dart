@@ -17,10 +17,10 @@ class TasksView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StateListener(
+    return StateListener<String>(
       watchable: errorRef,
-      onStateChanged: (context, String error) {
-        Scaffold.of(context)
+      onStateChanged: (BuildContext context, String error) {
+        ScaffoldMessenger.of(context)
           ..hideCurrentSnackBar()
           ..showSnackBar(SnackBar(
             content: Text(error),

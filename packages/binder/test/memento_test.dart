@@ -19,33 +19,8 @@ final b = StateRef(0);
 
 void main() {
   group('MementoScope', () {
-    test('constructor assertions', () {
-      expect(
-        () => MementoScope(
-          child: null,
-        ),
-        throwsAssertionError,
-      );
-
-      expect(
-        () => MementoScope(
-          maxCapacity: null,
-          child: const SizedBox(),
-        ),
-        throwsAssertionError,
-      );
-
-      expect(
-        () => MementoScope(
-          refs: null,
-          child: const SizedBox(),
-        ),
-        throwsAssertionError,
-      );
-    });
-
     testWidgets('undo throws when there is no memento above', (tester) async {
-      BuildContext c0;
+      late BuildContext c0;
       await tester.pumpWidget(
         BinderScope(
           child: Builder(
@@ -75,7 +50,7 @@ void main() {
 
     group('undo', () {
       testWidgets('throws when there is no memento above', (tester) async {
-        BuildContext c0;
+        late BuildContext c0;
         await tester.pumpWidget(
           BinderScope(
             child: Builder(
@@ -134,7 +109,7 @@ void main() {
 
     group('redo', () {
       testWidgets('throws when there is no memento above', (tester) async {
-        BuildContext c0;
+        late BuildContext c0;
         await tester.pumpWidget(
           BinderScope(
             child: Builder(
@@ -212,14 +187,14 @@ void main() {
 
 extension on WidgetTester {
   Future<MementoLogic> pumpMemento({
-    int maxCapacity,
-    List<StateRef> refs,
+    int maxCapacity = 256,
+    List<StateRef> refs = const <StateRef>[],
   }) async {
-    BuildContext c0;
+    late BuildContext c0;
     await pumpWidget(
       MementoScope(
-        maxCapacity: maxCapacity ?? 256,
-        refs: refs ?? [],
+        maxCapacity: maxCapacity,
+        refs: refs,
         child: Builder(
           builder: (context) {
             c0 = context;

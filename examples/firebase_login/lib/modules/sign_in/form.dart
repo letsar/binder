@@ -14,11 +14,11 @@ class SignInForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StateListener(
+    return StateListener<SignInResult>(
       watchable: signInResultRef,
-      onStateChanged: (context, SignInResult state) {
+      onStateChanged: (BuildContext context, SignInResult state) {
         if (state is SignInFailure) {
-          Scaffold.of(context)
+          ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
               const SnackBar(content: Text('Authentication Failure')),

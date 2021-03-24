@@ -15,9 +15,9 @@ class AuthenticationView extends StatelessWidget {
       ),
       body: LogicLoader(
         refs: [authenticationViewLogicRef],
-        child: StateListener(
+        child: StateListener<bool>(
           watchable: isAuthenticatedRef,
-          onStateChanged: (context, bool isAuthenticated) {
+          onStateChanged: (BuildContext context, bool isAuthenticated) {
             if (isAuthenticated) {
               Navigator.of(context).pushReplacementNamed('/home');
             }

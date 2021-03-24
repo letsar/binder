@@ -8,9 +8,9 @@ void main() {
     final a = StateRef(1);
     final b = StateRef(StateRef(0));
 
-    BuildContext ctx;
+    late BuildContext ctx;
     int buildCount = 0;
-    int value;
+    int? value;
 
     final widget = Builder(
       builder: (context) {
@@ -50,9 +50,9 @@ void main() {
       return value + 6;
     });
 
-    BuildContext ctx;
+    late BuildContext ctx;
     int buildCount = 0;
-    int value;
+    int? value;
 
     final widget = Builder(
       builder: (context) {
@@ -92,9 +92,9 @@ void main() {
       return value.toInt();
     });
 
-    BuildContext ctx;
+    late BuildContext ctx;
     int buildCount = 0;
-    int value;
+    int? value;
 
     final widget = Builder(
       builder: (context) {
@@ -141,11 +141,11 @@ void main() {
       return value > 20;
     });
 
-    BuildContext ctx;
+    late BuildContext ctx;
     int buildCount = 0;
-    int value;
-    bool d1Value;
-    bool d2Value;
+    int? value;
+    bool? d1Value;
+    bool? d2Value;
 
     final widget = Builder(
       builder: (context) {
@@ -201,9 +201,9 @@ void main() {
   testWidgets('modify a state ref though a child scope', (tester) async {
     final a = StateRef(1);
 
-    BuildContext ctx;
+    late BuildContext ctx;
     int buildCount = 0;
-    int value;
+    int? value;
 
     final w2 = Builder(
       builder: (context) {
@@ -241,15 +241,15 @@ void main() {
       'When the inner StateRef changes but not inner value, '
       'Then the computed should be updated as well', (tester) async {
     final a = StateRef<int>(1);
-    final b = StateRef<StateRef<int>>(a);
+    final StateRef<StateRef<int>> b = StateRef<StateRef<int>>(a);
     final c = Computed<int>((watch) {
       final value = watch(watch(b));
       return value * 10;
     });
 
-    BuildContext ctx;
+    late BuildContext ctx;
     int buildCount = 0;
-    int value;
+    int? value;
 
     final w2 = Builder(
       builder: (context) {

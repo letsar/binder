@@ -7,22 +7,11 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   group('Consumer', () {
     test('arguments control', () {
-      const child = SizedBox();
-      Widget build(BuildContext context, int value, Widget child) {
-        return child;
+      Widget build(BuildContext context, int? value, Widget? child) {
+        return const SizedBox();
       }
 
       final a = StateRef(0);
-
-      expect(
-        () => Consumer(watchable: null, builder: build, child: child),
-        throwsAssertionError,
-      );
-
-      expect(
-        () => Consumer(watchable: a, builder: null, child: child),
-        throwsAssertionError,
-      );
 
       // Don't throw.
       Consumer(watchable: a, builder: build, child: null);
@@ -31,8 +20,8 @@ void main() {
     testWidgets('works with StateRef', (tester) async {
       final logs = <String>[];
       final a = StateRef(0);
-      BuildContext ctx;
-      int v;
+      late BuildContext ctx;
+      int? v;
 
       await tester.pumpWidget(
         BinderScope(
@@ -40,11 +29,11 @@ void main() {
             logs.add('parent');
             return Consumer(
               watchable: a,
-              builder: (context, int value, child) {
+              builder: (context, int? value, child) {
                 v = value;
                 ctx = context;
                 logs.add('consumer');
-                return child;
+                return child!;
               },
               child: Builder(
                 builder: (_) {
@@ -69,8 +58,8 @@ void main() {
     testWidgets('works with select', (tester) async {
       final logs = <String>[];
       final a = StateRef(0);
-      BuildContext ctx;
-      int v;
+      late BuildContext ctx;
+      int? v;
 
       await tester.pumpWidget(
         BinderScope(
@@ -82,7 +71,7 @@ void main() {
                 v = value;
                 ctx = context;
                 logs.add('consumer');
-                return child;
+                return child!;
               },
               child: Builder(
                 builder: (_) {
@@ -109,8 +98,8 @@ void main() {
       final b = StateRef(0);
       final a = Computed((watch) => watch(b) + 4);
 
-      BuildContext ctx;
-      int v;
+      late BuildContext ctx;
+      int? v;
 
       await tester.pumpWidget(
         BinderScope(
@@ -122,7 +111,7 @@ void main() {
                 v = value;
                 ctx = context;
                 logs.add('consumer');
-                return child;
+                return child!;
               },
               child: Builder(
                 builder: (_) {

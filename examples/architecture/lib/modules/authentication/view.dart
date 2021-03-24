@@ -60,9 +60,9 @@ class AuthenticationResultHandler extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StateListener(
+    return StateListener<AuthenticationResult>(
       watchable: authenticationResultRef,
-      onStateChanged: (context, AuthenticationResult state) {
+      onStateChanged: (BuildContext context, AuthenticationResult state) {
         if (state is AuthenticationFailure) {
           showDialog<void>(
             context: context,

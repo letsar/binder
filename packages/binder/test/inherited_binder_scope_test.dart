@@ -2,110 +2,82 @@ import 'package:binder/src/binder_container.dart';
 import 'package:binder/src/core.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 
 // ignore: must_be_immutable
 class MockStateRefBase<T> extends Mock implements Watchable<T> {}
 
-Watchable<int> ref;
+final Watchable<int> ref = MockStateRefBase();
 
 void main() {
   setUp(() {
-    ref = MockStateRefBase();
+    reset(ref);
   });
 
   group('Aspect', () {
     test('shouldRebuild returns false if states are considered equals', () {
-      when(ref.equals(1, 1)).thenReturn(true);
-      when(ref.read(any, any)).thenReturn(1);
+      T read<T>(BinderKey key, T state) {
+        return state;
+      }
+
+      when(() => ref.equals(1, 1)).thenReturn(true);
+      when(() => ref.read(read, any())).thenReturn(1);
 
       final aspect = Aspect(ref, null);
-      final shouldRebuild = aspect.shouldRebuild(null, null);
+      final shouldRebuild = aspect.shouldRebuild(read, read);
       expect(shouldRebuild, false);
     });
 
     test('shouldRebuild returns true if states are not considered equals', () {
-      when(ref.equals(1, 1)).thenReturn(false);
-      when(ref.read(any, any)).thenReturn(1);
+      T read<T>(BinderKey key, T state) {
+        return state;
+      }
+
+      when(() => ref.equals(1, 1)).thenReturn(false);
+      when(() => ref.read(read, any())).thenReturn(1);
 
       final aspect = Aspect(ref, null);
-      final shouldRebuild = aspect.shouldRebuild(null, null);
+      final shouldRebuild = aspect.shouldRebuild(read, read);
       expect(shouldRebuild, true);
     });
   });
 
   group('InheritedBinderScope', () {
-    test('container and child cannot be null ', () {
-      // We expect that the binder can be null.
-      const InheritedBinderScope(
-        container: BinderContainer(null, null),
-        scope: null,
-        writtenKeys: {},
-        child: SizedBox(),
-      );
-
-      expect(
-        () => InheritedBinderScope(
-          container: null,
-          scope: null,
-          writtenKeys: const {},
-          child: const SizedBox(),
-        ),
-        throwsAssertionError,
-      );
-
-      expect(
-        () => InheritedBinderScope(
-          container: const BinderContainer(null, null),
-          scope: null,
-          child: null,
-          writtenKeys: const {},
-        ),
-        throwsAssertionError,
-      );
-
-      expect(
-        () => InheritedBinderScope(
-          container: const BinderContainer(null, null),
-          scope: null,
-          writtenKeys: null,
-          child: const SizedBox(),
-        ),
-        throwsAssertionError,
-      );
-    });
-
     test('do not notify when container are the same', () {
-      const oldWidget = InheritedBinderScope(
-        container: BinderContainer(null, null),
-        scope: null,
-        writtenKeys: {},
-        child: SizedBox(),
+      const container = BinderContainer(<BinderKey, Object?>{}, null);
+      final scope = MockScope();
+      final oldWidget = InheritedBinderScope(
+        container: container,
+        scope: scope,
+        writtenKeys: const {},
+        child: const SizedBox(),
       );
 
-      const newWidget = InheritedBinderScope(
-        container: BinderContainer(null, null),
-        scope: null,
-        writtenKeys: {},
-        child: SizedBox(),
+      final newWidget = InheritedBinderScope(
+        container: container,
+        scope: scope,
+        writtenKeys: const {},
+        child: const SizedBox(),
       );
 
       expect(newWidget.updateShouldNotify(oldWidget), false);
     });
 
     test('can notify when container are different', () {
-      const oldWidget = InheritedBinderScope(
-        container: BinderContainer({null: 6}, null),
-        scope: null,
-        writtenKeys: {},
-        child: SizedBox(),
+      final scope = MockScope();
+
+      final oldWidget = InheritedBinderScope(
+        container: const BinderContainer({BinderKey(''): 6}, null),
+        scope: scope,
+        writtenKeys: const {},
+        child: const SizedBox(),
       );
 
-      const newWidget = InheritedBinderScope(
-        container: BinderContainer({null: 4}, null),
-        scope: null,
-        writtenKeys: {},
-        child: SizedBox(),
+      final newWidget = InheritedBinderScope(
+        container: const BinderContainer({BinderKey(''): 4}, null),
+        scope: scope,
+        writtenKeys: const {},
+        child: const SizedBox(),
       );
 
       expect(newWidget.updateShouldNotify(oldWidget), true);
@@ -123,16 +95,18 @@ void main() {
         intRef1.key: 7,
       };
 
+      final scope = MockScope();
+
       final oldWidget = InheritedBinderScope(
         container: BinderContainer(oldState, null),
-        scope: null,
+        scope: scope,
         writtenKeys: const {},
         child: const SizedBox(),
       );
 
       final newWidget = InheritedBinderScope(
         container: BinderContainer(newState, null),
-        scope: null,
+        scope: scope,
         writtenKeys: {intRef1.key, intRef2.key},
         child: const SizedBox(),
       );
@@ -157,16 +131,18 @@ void main() {
         intRef1.key: 6,
       };
 
+      final scope = MockScope();
+
       final oldWidget = InheritedBinderScope(
         container: BinderContainer(oldState, null),
-        scope: null,
+        scope: scope,
         writtenKeys: const {},
         child: const SizedBox(),
       );
 
       final newWidget = InheritedBinderScope(
         container: BinderContainer(newState, null),
-        scope: null,
+        scope: scope,
         writtenKeys: {intRef1.key},
         child: const SizedBox(),
       );
@@ -193,16 +169,18 @@ void main() {
         intRef1.key: 7,
       };
 
+      final scope = MockScope();
+
       final oldWidget = InheritedBinderScope(
         container: BinderContainer(oldState, null),
-        scope: null,
+        scope: scope,
         writtenKeys: const {},
         child: const SizedBox(),
       );
 
       final newWidget = InheritedBinderScope(
         container: BinderContainer(newState, null),
-        scope: null,
+        scope: scope,
         writtenKeys: {intRef1.key},
         child: const SizedBox(),
       );
@@ -232,16 +210,18 @@ void main() {
         intRef2.key: 0,
       };
 
+      final scope = MockScope();
+
       final oldWidget = InheritedBinderScope(
         container: BinderContainer(oldState, null),
-        scope: null,
+        scope: scope,
         writtenKeys: const {},
         child: const SizedBox(),
       );
 
       final newWidget = InheritedBinderScope(
         container: BinderContainer(newState, null),
-        scope: null,
+        scope: scope,
         writtenKeys: {intRef1.key, intRef2.key},
         child: const SizedBox(),
       );
@@ -272,16 +252,18 @@ void main() {
         intRef2.key: 0,
       };
 
+      final scope = MockScope();
+
       final oldWidget = InheritedBinderScope(
         container: BinderContainer(oldState, null),
-        scope: null,
+        scope: scope,
         writtenKeys: const {},
         child: const SizedBox(),
       );
 
       var newWidget = InheritedBinderScope(
         container: BinderContainer(newState, null),
-        scope: null,
+        scope: scope,
         writtenKeys: const {},
         child: const SizedBox(),
       );
@@ -299,7 +281,7 @@ void main() {
 
       newWidget = InheritedBinderScope(
         container: BinderContainer(newState, null),
-        scope: null,
+        scope: scope,
         writtenKeys: {intRef1.key},
         child: const SizedBox(),
       );
@@ -317,7 +299,7 @@ void main() {
 
       newWidget = InheritedBinderScope(
         container: BinderContainer(newState, null),
-        scope: null,
+        scope: scope,
         writtenKeys: {intRef2.key},
         child: const SizedBox(),
       );

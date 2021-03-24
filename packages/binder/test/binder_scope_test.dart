@@ -7,31 +7,10 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('BinderScope', () {
-    test('must have a child', () {
-      expect(
-        () => BinderScope(child: null),
-        throwsAssertionError,
-      );
-    });
-
-    test('overrides cannot be null', () {
-      expect(
-        () => BinderScope(overrides: null, child: null),
-        throwsAssertionError,
-      );
-    });
-
-    test('observers cannot be null', () {
-      expect(
-        () => BinderScope(observers: null, child: null),
-        throwsAssertionError,
-      );
-    });
-
     testWidgets('throws when there is no BinderScope above', (tester) async {
       final a = StateRef(4);
       final b = LogicRef((scope) => null);
-      BuildContext c0;
+      late BuildContext c0;
       await tester.pumpWidget(
         Builder(
           builder: (c) {
@@ -48,7 +27,7 @@ void main() {
 
     testWidgets('do not save a StateRef initialState', (tester) async {
       final intRef = StateRef(4);
-      BuildContext c0;
+      late BuildContext c0;
       await tester.pumpWidget(
         BinderScope(
           child: Builder(
@@ -60,7 +39,7 @@ void main() {
         ),
       );
 
-      final state = c0.findAncestorStateOfType<BinderScopeState>();
+      final state = c0.findAncestorStateOfType<BinderScopeState>()!;
       expect(state.states.containsKey(intRef.key), false);
       c0.read(intRef);
       expect(state.states.containsKey(intRef.key), false);
@@ -68,7 +47,7 @@ void main() {
 
     testWidgets('saves a StateRef state by writing it', (tester) async {
       final intRef = StateRef(4);
-      BuildContext c0;
+      late BuildContext c0;
       await tester.pumpWidget(
         BinderScope(
           child: Builder(
@@ -80,7 +59,7 @@ void main() {
         ),
       );
 
-      final state = c0.findAncestorStateOfType<BinderScopeState>();
+      final state = c0.findAncestorStateOfType<BinderScopeState>()!;
       expect(state.states.containsKey(intRef.key), false);
       expect(c0.read(intRef), 4);
       c0.write(intRef, 8);
@@ -89,7 +68,7 @@ void main() {
     });
 
     testWidgets('is kept alive in scrolling widgets', (tester) async {
-      BuildContext c0;
+      late BuildContext c0;
       await tester.pumpWidget(
         BinderScope(
           child: Builder(
@@ -101,7 +80,7 @@ void main() {
         ),
       );
 
-      final state = c0.findAncestorStateOfType<BinderScopeState>();
+      final state = c0.findAncestorStateOfType<BinderScopeState>()!;
       expect(state is AutomaticKeepAliveClientMixin<BinderScope>, true);
       expect(state.wantKeepAlive, true);
     });
@@ -109,7 +88,7 @@ void main() {
     testWidgets('calling clear, removes a state', (tester) async {
       final a = StateRef(0);
 
-      BuildContext ctx;
+      late BuildContext ctx;
       await tester.pumpWidget(
         BinderScope(
           child: BinderScope(
@@ -126,7 +105,7 @@ void main() {
       ctx.write(a, 4);
       expect(ctx.read(a), 4);
 
-      final state = ctx.findAncestorStateOfType<BinderScopeState>();
+      final state = ctx.findAncestorStateOfType<BinderScopeState>()!;
       state.clear(a);
       expect(ctx.read(a), 0);
       expect(state.states.containsKey(a.key), isFalse);
@@ -135,8 +114,8 @@ void main() {
     testWidgets('calling use, creates the logic', (tester) async {
       final a = LogicRef((scope) => 4);
 
-      BuildContext c0;
-      BuildContext c1;
+      late BuildContext c0;
+      late BuildContext c1;
       await tester.pumpWidget(
         BinderScope(
           child: Builder(builder: (context) {
@@ -153,13 +132,13 @@ void main() {
         ),
       );
 
-      final state1 = c1.findAncestorStateOfType<BinderScopeState>();
+      final state1 = c1.findAncestorStateOfType<BinderScopeState>()!;
 
       expect(state1.states.containsKey(a.key), isFalse);
       expect(c1.use(a), 4);
       expect(state1.states.containsKey(a.key), isFalse);
 
-      final state0 = c0.findAncestorStateOfType<BinderScopeState>();
+      final state0 = c0.findAncestorStateOfType<BinderScopeState>()!;
       expect(state0.states.containsKey(a.key), isTrue);
     });
 
@@ -167,7 +146,7 @@ void main() {
       testWidgets('can be used with StateRef', (tester) async {
         final a = StateRef(0);
 
-        BuildContext ctx;
+        late BuildContext ctx;
         await tester.pumpWidget(
           BinderScope(
             child: Builder(
@@ -188,7 +167,7 @@ void main() {
         final a = StateRef(0);
         final selector = a.select((state) => state + 3);
 
-        BuildContext ctx;
+        late BuildContext ctx;
         await tester.pumpWidget(
           BinderScope(
             child: Builder(
@@ -209,7 +188,7 @@ void main() {
         final a = StateRef(0);
         final computed = Computed((watch) => watch(a) + 3);
 
-        BuildContext ctx;
+        late BuildContext ctx;
         await tester.pumpWidget(
           BinderScope(
             child: Builder(
@@ -233,7 +212,7 @@ void main() {
         (tester) async {
           final a = StateRef(0);
 
-          BuildContext c0;
+          late BuildContext c0;
           await tester.pumpWidget(
             BinderScope(
               child: Builder(
@@ -254,10 +233,10 @@ void main() {
         (tester) async {
           final a = StateRef(0);
 
-          int state;
+          int? state;
           int buildCount = 0;
 
-          BuildContext c0;
+          late BuildContext c0;
           await tester.pumpWidget(
             BinderScope(
               child: Builder(
@@ -291,10 +270,10 @@ void main() {
           final a = StateRef(0);
           final b = StateRef(0);
 
-          int state;
+          int? state;
           int buildCount = 0;
 
-          BuildContext c0;
+          late BuildContext c0;
           await tester.pumpWidget(
             BinderScope(
               child: Builder(
@@ -322,10 +301,10 @@ void main() {
         (tester) async {
           final a = StateRef(0);
 
-          int state;
+          int? state;
           int buildCount = 0;
 
-          BuildContext c0;
+          late BuildContext c0;
           await tester.pumpWidget(
             BinderScope(
               child: Builder(
@@ -362,10 +341,10 @@ void main() {
             return watch(a) * watch(b);
           });
 
-          num state;
+          num? state;
           int buildCount = 0;
 
-          BuildContext c0;
+          late BuildContext c0;
           await tester.pumpWidget(
             BinderScope(
               child: Builder(
@@ -448,7 +427,7 @@ void main() {
         final b = StateRef(0);
 
         final logs = <String>[];
-        BuildContext ctx;
+        late BuildContext ctx;
 
         final builder = Builder(builder: (context) {
           ctx = context;
@@ -510,7 +489,7 @@ void main() {
           return watch(b) * 2;
         });
 
-        BuildContext ctx;
+        late BuildContext ctx;
 
         final builder = Builder(builder: (context) {
           ctx = context;
@@ -554,12 +533,12 @@ void main() {
       testWidgets('can be used conditionnaly', (tester) async {
         final a = StateRef(1);
         final b = StateRef(2);
-        final c = StateRef(a);
+        final c = StateRef<StateRef<int>?>(a);
 
-        int state;
+        int? state;
         int buildCount = 0;
 
-        BuildContext ctx;
+        late BuildContext ctx;
 
         await tester.pumpWidget(
           BinderScope(
@@ -622,7 +601,7 @@ void main() {
     group('overrides', () {
       testWidgets('- states are direclty saved', (tester) async {
         final intRef = StateRef(4);
-        BuildContext c0;
+        late BuildContext c0;
         await tester.pumpWidget(
           BinderScope(
             overrides: [intRef.overrideWith(5)],
@@ -635,15 +614,15 @@ void main() {
           ),
         );
 
-        final state = c0.findAncestorStateOfType<BinderScopeState>();
+        final state = c0.findAncestorStateOfType<BinderScopeState>()!;
         expect(state.states.containsKey(intRef.key), true);
         expect(c0.read(intRef), 5);
       });
 
       testWidgets('are scoped to scope', (tester) async {
         final intRef = StateRef(4);
-        BuildContext c0;
-        BuildContext c1;
+        late BuildContext c0;
+        late BuildContext c1;
         await tester.pumpWidget(
           BinderScope(
             child: Builder(
@@ -679,7 +658,7 @@ void main() {
           (tester) async {
         final a = StateRef(0);
         final b = StateRef(0);
-        BuildContext ctx;
+        late BuildContext ctx;
 
         await tester.pumpWidget(
           BinderScope(
@@ -721,7 +700,7 @@ void main() {
         (tester) async {
           final a = StateRef(0);
           final b = StateRef(0);
-          BuildContext ctx;
+          late BuildContext ctx;
 
           await tester.pumpWidget(
             BinderScope(
@@ -766,7 +745,7 @@ void main() {
       testWidgets('- states are removed when the override is removed',
           (tester) async {
         final a = StateRef(0);
-        BuildContext ctx;
+        late BuildContext ctx;
 
         await tester.pumpWidget(
           BinderScope(
@@ -798,7 +777,7 @@ void main() {
         expect(ctx.read(a), 0);
         expect(
           ctx
-              .findAncestorStateOfType<BinderScopeState>()
+              .findAncestorStateOfType<BinderScopeState>()!
               .states
               .containsKey(a.key),
           isFalse,
@@ -808,7 +787,7 @@ void main() {
       testWidgets('- new overrides are added', (tester) async {
         final a = StateRef(0);
         final b = StateRef(0);
-        BuildContext ctx;
+        late BuildContext ctx;
 
         await tester.pumpWidget(
           BinderScope(
@@ -851,8 +830,8 @@ void main() {
         final a = StateRef(0);
         final b = StateRef(0);
 
-        BuildContext ctx;
-        int result;
+        late BuildContext ctx;
+        int? result;
 
         final child = Builder(
           builder: (context) {
@@ -917,7 +896,7 @@ void main() {
         final unnamed = StateRef(0);
         final named = StateRef(6, name: 'named');
         final scopeKey = GlobalKey();
-        BuildContext c0;
+        late BuildContext c0;
 
         await tester.pumpWidget(
           BinderScope(
@@ -991,11 +970,11 @@ void main() {
     testWidgets('modify a state ref through a child scope', (tester) async {
       final a = StateRef(1);
 
-      BuildContext ctx;
+      late BuildContext ctx;
       int buildCount = 0;
       int buildCount2 = 0;
-      int value;
-      int value2;
+      int? value;
+      int? value2;
 
       final w2 = Builder(
         builder: (context) {
@@ -1042,9 +1021,9 @@ void main() {
         return watch(watch(b)) + 1;
       });
 
-      BuildContext ctx;
-      int value01;
-      int value02;
+      late BuildContext ctx;
+      int? value01;
+      int? value02;
 
       final wc01 = Builder(
         builder: (context) {

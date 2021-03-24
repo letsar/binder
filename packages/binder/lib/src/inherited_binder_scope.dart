@@ -2,15 +2,12 @@ part of 'core.dart';
 
 class InheritedBinderScope extends InheritedWidget {
   const InheritedBinderScope({
-    Key key,
-    @required this.container,
-    @required this.scope,
-    @required this.writtenKeys,
-    @required Widget child,
-  })  : assert(container != null),
-        assert(child != null),
-        assert(writtenKeys != null),
-        super(key: key, child: child);
+    Key? key,
+    required this.container,
+    required this.scope,
+    required this.writtenKeys,
+    required Widget child,
+  }) : super(key: key, child: child);
 
   final BinderContainer container;
   final Scope scope;
@@ -39,7 +36,7 @@ class InheritedBinderScope extends InheritedWidget {
     });
   }
 
-  static InheritedBinderScope of(BuildContext context, [Aspect aspect]) {
+  static InheritedBinderScope? of(BuildContext context, [Aspect? aspect]) {
     return context.dependOnInheritedWidgetOfExactType<InheritedBinderScope>(
       aspect: aspect,
     );
@@ -55,8 +52,8 @@ class InheritedBinderScopeElement extends InheritedElement {
   InheritedBinderScope get widget => super.widget as InheritedBinderScope;
 
   @override
-  void updateDependencies(Element dependent, Object aspect) {
-    final dependencies = getDependencies(dependent) as Dependencies;
+  void updateDependencies(Element dependent, Object? aspect) {
+    final dependencies = getDependencies(dependent) as Dependencies?;
     if (dependencies != null && dependencies.isEmpty) {
       return;
     }
@@ -71,7 +68,7 @@ class InheritedBinderScopeElement extends InheritedElement {
 
   @override
   void notifyDependent(InheritedBinderScope oldWidget, Element dependent) {
-    final dependencies = getDependencies(dependent) as Dependencies;
+    final dependencies = getDependencies(dependent) as Dependencies?;
     if (dependencies == null) {
       return;
     }
@@ -83,7 +80,7 @@ class InheritedBinderScopeElement extends InheritedElement {
 }
 
 class Dependencies {
-  Dependencies([List<Aspect> aspects]) : aspects = aspects ?? <Aspect>[];
+  Dependencies([List<Aspect>? aspects]) : aspects = aspects ?? <Aspect>[];
 
   final List<Aspect> aspects;
   bool shouldClearAspects = false;
@@ -102,7 +99,7 @@ class Dependencies {
     // We only want the cleaning to occur one time.
     if (!shouldClearAspectsScheduled) {
       shouldClearAspectsScheduled = true;
-      SchedulerBinding.instance.addPostFrameCallback((_) {
+      SchedulerBinding.instance!.addPostFrameCallback((_) {
         shouldClearAspects = true;
         shouldClearAspectsScheduled = false;
       });
@@ -119,7 +116,7 @@ class Aspect<T> {
 
   final Watchable<T> ref;
 
-  final List<BinderKey> keys;
+  final List<BinderKey>? keys;
 
   bool shouldRebuild(StateReader oldReader, StateReader newReader) {
     final List<BinderKey> oldKeys = <BinderKey>[];
