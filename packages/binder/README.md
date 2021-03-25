@@ -19,21 +19,28 @@ A view can be interested in some particular states and has to use a logic compon
 
 
 
-- [Getting started](#getting-started)
-- [Basic usage](#basic-usage)
-- [Intermediate usage](#intermediate-usage)
-  - [Select](#select)
-  - [Consumer](#consumer)
-  - [LogicLoader](#logicLoader)
-  - [Overrides](#overrides)
-  - [Mocking values in tests](#mocking-values-in-tests)
-- [Advanced usage](#advanced-usage)
-  - [Computed](#computed)
-  - [Observers](#observers)
-  - [Undo/Redo](#undoredo)
-  - [Disposable](#disposable)
-  - [StateListener](#stateListener)
-- [Snippets](#snippets)
+- [binder](#binder)
+  - [The vision](#the-vision)
+  - [Getting started](#getting-started)
+    - [Installation](#installation)
+    - [Basic usage](#basic-usage)
+    - [Intermediate usage](#intermediate-usage)
+      - [Select](#select)
+      - [Consumer](#consumer)
+      - [LogicLoader](#logicloader)
+      - [Overrides](#overrides)
+        - [Reusing a reference under a different scope.](#reusing-a-reference-under-a-different-scope)
+      - [Mocking values in tests](#mocking-values-in-tests)
+    - [Advanced usage](#advanced-usage)
+      - [Computed](#computed)
+      - [Observers](#observers)
+      - [Undo/Redo](#undoredo)
+      - [Disposable](#disposable)
+      - [StateListener](#statelistener)
+      - [DartDev Tools](#dartdev-tools)
+  - [Snippets](#snippets)
+  - [Sponsoring](#sponsoring)
+  - [Contributions](#contributions)
 
 ## Getting started
 
@@ -109,7 +116,7 @@ In any widget under the `BinderScope`, you can call extension methods on `BuildC
 ```dart
 
 class CounterView extends StatelessWidget {
-  const CounterView({Key key}) : super(key: key);
+  const CounterView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -168,7 +175,7 @@ For example, if we have an app bar title which is only responsible for displayin
 
 ```dart
 class AppBarTitle extends StatelessWidget {
-  const AppBarTitle({Key key}) : super(key: key);
+  const AppBarTitle({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -187,7 +194,7 @@ This widget can take a watchable (a `StateRef` or even a selected state of a `St
 
 ```dart
 class MyAppBar extends StatelessWidget {
-  const MyAppBar({Key key}) : super(key: key);
+  const MyAppBar({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -238,7 +245,7 @@ From the widget side, you'll have to use the `LogicLoader` and provide it the lo
 ```dart
 class Home extends StatelessWidget {
   const Home({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -256,7 +263,7 @@ You can watch the state in a subtree to display a progress indicator when the da
 ```dart
 class UsersView extends StatelessWidget {
   const UsersView({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -278,7 +285,7 @@ Alternatively, you can use the `builder` parameter to achieve the same goal:
 ```dart
 class Home extends StatelessWidget {
   const Home({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -425,6 +432,7 @@ You may encounter a situation where different widgets are interested in a derive
 Let's say you have a list of products referenced by `productsRef`, each product has a price, and you can filter these products according to a price range (referenced by `minPriceRef` and `maxPriceRef`).
 
 You could then define the following `Computed` instance:
+
 ```dart
 final filteredProductsRef = Computed((watch) {
   final products = watch(productsRef);
