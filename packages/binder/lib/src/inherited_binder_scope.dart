@@ -99,6 +99,7 @@ class Dependencies {
     // We only want the cleaning to occur one time.
     if (!shouldClearAspectsScheduled) {
       shouldClearAspectsScheduled = true;
+      // ignore: unnecessary_non_null_assertion
       SchedulerBinding.instance!.addPostFrameCallback((_) {
         shouldClearAspects = true;
         shouldClearAspectsScheduled = false;

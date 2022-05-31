@@ -134,6 +134,7 @@ class BinderScopeState extends State<BinderScope>
     writtenKeys.add(key);
     if (!clearScheduled) {
       clearScheduled = true;
+      // ignore: unnecessary_non_null_assertion
       SchedulerBinding.instance!.addPostFrameCallback((_) {
         clearScheduled = false;
         writtenKeys.clear();
