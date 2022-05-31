@@ -54,7 +54,7 @@ class ValueListener<T> extends StatefulWidget {
     required this.onValueChanged,
     EqualityComparer<T>? equalityComparer,
     required this.child,
-  })   : equalityComparer = equalityComparer ?? _defaultEqualityComparer,
+  })  : equalityComparer = equalityComparer ?? _defaultEqualityComparer,
         super(key: key);
 
   /// The value to listen to changes.
@@ -80,7 +80,7 @@ class _ValueListenerState<T> extends State<ValueListener<T>> {
   void didUpdateWidget(ValueListener<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (!widget.equalityComparer(oldWidget.value, widget.value)) {
-      WidgetsBinding.instance!.addPostFrameCallback(
+      WidgetsBinding.instance.addPostFrameCallback(
         (_) => widget.onValueChanged(context, widget.value),
       );
     }

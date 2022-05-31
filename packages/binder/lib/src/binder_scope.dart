@@ -134,7 +134,7 @@ class BinderScopeState extends State<BinderScope>
     writtenKeys.add(key);
     if (!clearScheduled) {
       clearScheduled = true;
-      SchedulerBinding.instance!.addPostFrameCallback((_) {
+      SchedulerBinding.instance.addPostFrameCallback((_) {
         clearScheduled = false;
         writtenKeys.clear();
       });
@@ -163,9 +163,7 @@ class BinderScopeState extends State<BinderScope>
       if (effectiveObservers.isEmpty) {
         applyNewState();
       } else {
-        final T oldState = states.containsKey(ref.key)
-            ? states[ref.key] as T
-            : ref.initialState;
+        final T oldState = states.containsKey(ref.key) ? states[ref.key] as T : ref.initialState;
         applyNewState();
         effectiveObservers.any((observer) {
           return observer!.didChanged(ref, oldState, state, action);
@@ -227,8 +225,7 @@ class BinderScopeState extends State<BinderScope>
   @override
   bool get wantKeepAlive => true;
 
-  Set<BinderKey> get allWrittenKeys =>
-      writtenKeys.toSet()..addAll(parent?.allWrittenKeys ?? {});
+  Set<BinderKey> get allWrittenKeys => writtenKeys.toSet()..addAll(parent?.allWrittenKeys ?? {});
 
   @override
   Widget build(BuildContext context) {

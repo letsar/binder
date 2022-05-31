@@ -69,7 +69,7 @@ class _LogicLoaderState extends State<LogicLoader> {
     // rebuild a parent here.
     // The counter part, is that the actual rebuild will occur in two frames
     // and not in the next one.
-    WidgetsBinding.instance!.addPostFrameCallback((_) => load());
+    WidgetsBinding.instance.addPostFrameCallback((_) => load());
   }
 
   Future<void> load() async {

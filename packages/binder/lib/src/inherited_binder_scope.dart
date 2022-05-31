@@ -61,8 +61,7 @@ class InheritedBinderScopeElement extends InheritedElement {
     if (aspect == null) {
       setDependencies(dependent, Dependencies());
     } else {
-      setDependencies(
-          dependent, (dependencies ?? Dependencies())..add(aspect as Aspect));
+      setDependencies(dependent, (dependencies ?? Dependencies())..add(aspect as Aspect));
     }
   }
 
@@ -72,8 +71,7 @@ class InheritedBinderScopeElement extends InheritedElement {
     if (dependencies == null) {
       return;
     }
-    if (dependencies.isEmpty ||
-        widget.updateShouldNotifyDependent(oldWidget, dependencies)) {
+    if (dependencies.isEmpty || widget.updateShouldNotifyDependent(oldWidget, dependencies)) {
       dependent.didChangeDependencies();
     }
   }
@@ -99,7 +97,7 @@ class Dependencies {
     // We only want the cleaning to occur one time.
     if (!shouldClearAspectsScheduled) {
       shouldClearAspectsScheduled = true;
-      SchedulerBinding.instance!.addPostFrameCallback((_) {
+      SchedulerBinding.instance.addPostFrameCallback((_) {
         shouldClearAspects = true;
         shouldClearAspectsScheduled = false;
       });
