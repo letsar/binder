@@ -80,6 +80,7 @@ class _ValueListenerState<T> extends State<ValueListener<T>> {
   void didUpdateWidget(ValueListener<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (!widget.equalityComparer(oldWidget.value, widget.value)) {
+      // ignore: unnecessary_non_null_assertion
       WidgetsBinding.instance!.addPostFrameCallback(
         (_) => widget.onValueChanged(context, widget.value),
       );

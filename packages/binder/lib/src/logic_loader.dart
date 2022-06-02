@@ -69,6 +69,7 @@ class _LogicLoaderState extends State<LogicLoader> {
     // rebuild a parent here.
     // The counter part, is that the actual rebuild will occur in two frames
     // and not in the next one.
+    // ignore: unnecessary_non_null_assertion
     WidgetsBinding.instance!.addPostFrameCallback((_) => load());
   }
 
